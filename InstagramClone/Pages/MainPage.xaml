@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 x:Class="InstagramClone.Pages.MainPage"
+			 NavigationPage.HasNavigationBar="False"
+			 BackgroundColor="White">
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,Auto">
+            <StackLayout Orientation="Horizontal" Margin="15,0,15,0">
+                <Frame WidthRequest="150"  Padding="0" BackgroundColor="Transparent" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand">
+                    <Image Source="instletters.png"/>
+                </Frame>
+
+                <StackLayout Orientation="Horizontal" Spacing="30">
+                    <Image  Source="heart" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
+                    <Image Source="messenger" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+            </StackLayout>
+            <CollectionView Grid.Row="1" ItemsLayout="HorizontalList" ItemsSource="{Binding Stories}"
+							Margin="0,0,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Frame Padding="5" WidthRequest="85" HeightRequest="85"
+								   Margin="10,0,10,0" BorderColor="Red" 
+							       CornerRadius="50"
+								   IsClippedToBounds="True">
+                                <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
+							           CornerRadius="50"
+								       IsClippedToBounds="True">
+                                    <Image Source="{Binding ImageUrl}" Aspect="Fill"/>
+                                </Frame>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
