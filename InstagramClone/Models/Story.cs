@@ -11,7 +11,7 @@ namespace InstagramClone.Models
         //relation
         public string UserName { get; set; }
         //public int IsActive { get; set; }
-
+        //delete
         public static IEnumerable<Story> GetAllStories()
         {
             return new List<Story>
