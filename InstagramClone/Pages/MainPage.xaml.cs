@@ -15,6 +15,10 @@ namespace InstagramClone.Pages
         public MainPage()
         {
             InitializeComponent();
+            PostsCV.ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical)
+            {
+                ItemSpacing=20
+            };
         }
     }
 }
