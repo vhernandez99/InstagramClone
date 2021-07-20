@@ -6,5 +6,6 @@ namespace InstagramClone.Models
 {
     class Comment
     {
+        //
     }
 }
