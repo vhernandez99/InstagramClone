@@ -4,6 +4,7 @@
 			 x:Class="InstagramClone.Pages.MainPage"
 			 NavigationPage.HasNavigationBar="False"
 			 BackgroundColor="White">
+
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,Auto,Auto">
             <StackLayout Orientation="Horizontal" Margin="15,0,15,0">
@@ -15,65 +16,67 @@
                     <Image Source="messenger" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
                 </StackLayout>
             </StackLayout>
-            <ScrollView Grid.Row="1">
-                <StackLayout>
-                    <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
+            <StackLayout Grid.Row="1">
+                <CollectionView Grid.Row="2" ItemsSource="{Binding Posts}" x:Name="PostsCV">
+                    <CollectionView.Header>
+                        <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
 							Margin="0,0,0,0">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" >
-                            </LinearItemsLayout>
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout >
-                                    <Frame Padding="5" WidthRequest="65" HeightRequest="65"
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" >
+                                </LinearItemsLayout>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout>
+                                        <Frame Padding="5" WidthRequest="65" HeightRequest="65"
 								   Margin="8,0,8,0" BorderColor="Red" 
 							       CornerRadius="50"
 								   IsClippedToBounds="True">
-                                        <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
+                                            <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
 							           CornerRadius="50"
 								       IsClippedToBounds="True">
-                                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                                <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                            </Frame>
                                         </Frame>
-                                    </Frame>
-                                    <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
-                                    <BoxView HeightRequest="0.5" Color="#f7f7f7"></BoxView>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                    <CollectionView Grid.Row="2" ItemsSource="{Binding Posts}" x:Name="PostsCV">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout>
-                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                        <Frame Padding="0" WidthRequest="30" HeightRequest="30"
+                                        <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
+                                        <BoxView HeightRequest="0.5" Color="#f7f7f7"></BoxView>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
+                                    <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
                                        CornerRadius="15">
-                                            <Image Source="face1.jpg" Aspect="AspectFill"/>
-                                        </Frame>
-                                        <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" FontAttributes="Bold"/>
-                                        <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
-                                    </StackLayout>
-                                    <Frame Padding="0">
-                                        <Image Source="post1.jpg"/>
+                                        <Image Source="face1.jpg" Aspect="AspectFill"/>
                                     </Frame>
-                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                        <Image Source="heart" WidthRequest="25"/>
-                                        <Image Source="comment" WidthRequest="55"/>
-                                        <Image Source="message" WidthRequest="35"/>
-                                        <Image/>
-                                    </StackLayout>
-
+                                    <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" FontAttributes="Bold"/>
+                                    <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
                                 </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
-                
-            </ScrollView>
+                                <Frame Padding="0">
+                                    <Image Source="post1.jpg"/>
+                                </Frame>
+                                <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
+                                    <Image Source="heart" WidthRequest="25"/>
+                                    <Image Source="comment" WidthRequest="55"/>
+                                    <Image Source="message" WidthRequest="35"/>
+                                    <Image Source="savepost" WidthRequest="35" HorizontalOptions="EndAndExpand"/>
+                                    <Image/>
+                                </StackLayout>
+                                <StackLayout Margin="7,0,0,0">
+                                    <Label Text="70 views" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding UserName}" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="View 10 comments" TextColor="Gray"/>
+                                    <Label Text="57 seconds ago" TextColor="Gray" FontSize="Caption"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
         </Grid>
-
-        
     </ContentPage.Content>
 </ContentPage>

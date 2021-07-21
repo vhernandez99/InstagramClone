@@ -17,7 +17,7 @@ namespace InstagramClone.Pages
             InitializeComponent();
             PostsCV.ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical)
             {
-                ItemSpacing=20
+                ItemSpacing=5
             };
         }
     }
