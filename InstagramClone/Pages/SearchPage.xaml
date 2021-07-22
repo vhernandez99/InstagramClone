@@ -1,12 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="InstagramClone.Pages.SearchPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:entry="clr-namespace:InstagramClone.Helper"
+             x:Class="InstagramClone.Pages.SearchPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid RowDefinitions="Auto,Auto">
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Images}" Margin="10,0,10,10">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="5" HorizontalItemSpacing="3"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Header>
+                    <Frame CornerRadius="10" Padding="0" Margin="0,0,0,0" 
+                           BackgroundColor="#efefef">
+                        <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
+                            <Image Grid.Column="1" Source="search.png" HorizontalOptions="Start" Margin="10,0,0,0"
+                           WidthRequest="20" BackgroundColor="Transparent" />
+                            <entry:BorderlessEntry BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
+                                <entry:BorderlessEntry.Behaviors>
+                                    <xct:EventToCommandBehavior EventName="Focused" Command="{Binding GoToSearchingPage}"/>
+                                </entry:BorderlessEntry.Behaviors>
+                            </entry:BorderlessEntry>
+                        </StackLayout>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToSearchingPage}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </CollectionView.Header>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="139,0.25*,0.25*,0.25*" RowDefinitions="130,130,Auto,Auto">
+                            <Frame Padding="0" Grid.Column="0" 
+                                   HeightRequest="130" WidthRequest="200">
+                                <Image Source="{Binding ImageUrl}" Aspect="Fill"/>
+                            </Frame>
+                            <Frame Padding="0" Grid.Column="0" Grid.Row="1"
+                                   HeightRequest="130" WidthRequest="200">
+                                <Image Source="{Binding ImageUrl2}" Aspect="Fill"/>
+                            </Frame>
+                            <Frame Padding="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2"
+                                   HeightRequest="130" WidthRequest="200">
+                                <Image Source="{Binding ImageUrl3}" Aspect="AspectFill"/>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

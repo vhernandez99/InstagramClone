@@ -17,7 +17,8 @@
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Row="1">
-                <CollectionView Grid.Row="2" ItemsSource="{Binding Posts}" x:Name="PostsCV">
+                <RefreshView>
+                    <CollectionView Grid.Row="2" ItemsSource="{Binding Posts}" x:Name="PostsCV">
                     <CollectionView.Header>
                         <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
 							Margin="0,0,0,0">
@@ -39,7 +40,7 @@
                                             </Frame>
                                         </Frame>
                                         <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
-                                        <BoxView HeightRequest="0.5" Color="#f7f7f7"></BoxView>
+                                        <BoxView HeightRequest="1" Color="#f7f7f7"></BoxView>
                                     </StackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -76,7 +77,10 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-            </StackLayout>
+        </RefreshView>
+        </StackLayout>
         </Grid>
+
+        
     </ContentPage.Content>
 </ContentPage>

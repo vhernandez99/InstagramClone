@@ -19,6 +19,7 @@ namespace InstagramClone.Pages
             {
                 ItemSpacing=5
             };
+            
         }
     }
 }

@@ -1,11 +1,25 @@
 ﻿using FreshMvvm;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using InstagramClone.Models;
+using System.Collections.ObjectModel;
+using Xamarin.Forms;
 
 namespace InstagramClone.PageModels
 {
-    class SearchPageModel : FreshBasePageModel
+    public class SearchPageModel : FreshBasePageModel
     {
+        public Command GoToSearchingPage { get; set; }
+        public ObservableCollection<Post> Images { get; set; }
+
+
+        public SearchPageModel()
+        {
+            GoToSearchingPage = new Command(() =>
+            {
+                CoreMethods.PushPageModel<SearchingPageModel>();
+            });
+            Images = new ObservableCollection<Post>(Post.GetAllPosts());
+        }
     }
 }
+
+

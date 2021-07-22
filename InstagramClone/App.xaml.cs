@@ -15,7 +15,7 @@ namespace InstagramClone
             InitializeComponent();
             var tabbedNavigation = new FreshTabbedNavigationContainer();
             tabbedNavigation.SelectedTabColor = Color.Black;
-            
+            tabbedNavigation.BarBackgroundColor = Color.White;
            
             tabbedNavigation.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
             tabbedNavigation.AddTab<MainPageModel>("", "home.png");
