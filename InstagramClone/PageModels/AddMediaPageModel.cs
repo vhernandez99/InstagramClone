@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InstagramClone.PageModels
 {
-    class AddMediaPageModel: FreshBasePageModel
+    public class AddMediaPageModel: FreshBasePageModel
     {
     }
 }

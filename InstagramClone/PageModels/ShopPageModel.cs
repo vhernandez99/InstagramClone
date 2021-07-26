@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InstagramClone.PageModels
 {
-    class ShopPageModel : FreshBasePageModel
+    public class ShopPageModel : FreshBasePageModel
     {
     }
 }

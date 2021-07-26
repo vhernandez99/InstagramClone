@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             x:Class="InstagramClone.Pages.SignUpPage"
+             BackgroundColor="#33CC33"
+             NavigationPage.HasNavigationBar="False">
+             
+    <ContentPage.Resources>
+        <Style TargetType="entry:BorderlessEntry" Class="EntryStyle">
+            <Setter Property="BackgroundColor"
+                    Value="White"/>
+        </Style>
+        <Style TargetType="Frame" Class="RoundedFrame">
+            <Setter Property="CornerRadius"
+                    Value="5"/>
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*,50">
+            <Frame Padding="0" BackgroundColor="White" HeightRequest="150" Margin="0,-25,0,0" CornerRadius="10">
+                <Image Source="slife" WidthRequest="100" HeightRequest="50" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White"/>
+            </Frame>
+            <Frame Grid.Row="1" CornerRadius="10" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" >
+                <StackLayout Margin="10" Spacing="20" VerticalOptions="CenterAndExpand">
+                    
+                    <Label Text="Registro" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Nombre"  Text="{Binding Name}"/>
+                    </Frame>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Usuario" Text="{Binding User}"/>
+                    </Frame>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
+                    </Frame>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Confirmar contraseña" IsPassword="True" Text="{Binding ConfirmPassword}" />
+                    </Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Button ImageSource="selfie.png" BackgroundColor="White" WidthRequest="100" VerticalOptions="Start" CornerRadius="8" Command="{Binding SelectImageCommand}" 
+                                HorizontalOptions="StartAndExpand"/>
+                        <Frame Padding="0" WidthRequest="150" HeightRequest="150" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand"  
+                               BackgroundColor="Transparent" Margin="0,-20,0,0">
+                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    
+                    
+                    <Button Text="Crear cuenta" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding LoginCommand}"/>
+                    <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="Blue" FontSize="Medium">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </Frame>
+
+
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

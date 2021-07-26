@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InstagramClone.Pages.PostCommentsPage"
+             Title="Comentarios"
+             x:Name="Comentariospage"
+             BackgroundColor="White"
+             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView ItemsSource="{Binding PostCommentsCollection}">
+                <CollectionView.Header>
+                    <StackLayout>
+                        <StackLayout Orientation="Horizontal" Margin="15,20,10,0">
+                            <Frame Padding="0" WidthRequest="50" HeightRequest="50" 
+                                       CornerRadius="25">
+                                <Image Source="{Binding Path=BindingContext.UserImageUrl, Source={x:Reference Comentariospage }}" Aspect="AspectFill"/>
+                            </Frame>
+                            <Label Text="{Binding Path=BindingContext.PostUserName,Source={Reference Comentariospage}}" VerticalOptions="CenterAndExpand" FontAttributes="Bold"
+                               TextColor="Black"/>
+                        <Label Text="{Binding Path=BindingContext.PostDescription,Source={Reference Comentariospage}}"  
+                               VerticalOptions="CenterAndExpand" TextColor="Black"/>
+                    </StackLayout>
+                        <BoxView Color="LightGray" HeightRequest="1"/>
+                    </StackLayout>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowDefinitions="Auto" ColumnDefinitions="Auto" >
+                            <StackLayout Margin="15,0,0,0">
+                                <Frame Padding="0" WidthRequest="50" CornerRadius="25">
+                                    <Image Source="{Binding UserImageUrl}" Aspect="AspectFill" />
+                                </Frame>
+                            </StackLayout>
+                            <Label VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1" Margin="0,0,15,0">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding UserName}" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="  "/>
+                                        <Span Text="{Binding Description}" TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,Auto,*" Margin="15,20,0,5">
+                <Frame Padding="0" WidthRequest="50" HeightRequest="50" 
+                                       CornerRadius="25">
+                    <Image Source="{Binding Path=BindingContext.UserImageUrl, Source={x:Reference Comentariospage }}" Aspect="AspectFill"/>
+                    
+                </Frame>
+                <entry:BorderlessEntry Grid.Column="1" Placeholder="Agregar un comentario..." FontSize="Small" Text="{Binding CommentText}"  />
+                <Label Text="Comentar" Grid.Column="2" VerticalTextAlignment="Center" TextColor="#427da4" HorizontalOptions="EndAndExpand" Margin="0,0,15,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PostCommentCommand}"  />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

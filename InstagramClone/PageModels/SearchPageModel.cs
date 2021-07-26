@@ -17,7 +17,7 @@ namespace InstagramClone.PageModels
             {
                 CoreMethods.PushPageModel<SearchingPageModel>();
             });
-            Images = new ObservableCollection<Post>(Post.GetAllPosts());
+           //Images = new ObservableCollection<Post>(Post.GetAllPosts());
         }
     }
 }

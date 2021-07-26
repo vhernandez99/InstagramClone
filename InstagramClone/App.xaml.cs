@@ -5,28 +5,39 @@ using FreshMvvm;
 
 using InstagramClone.PageModels;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Xamarin.Essentials;
 
 namespace InstagramClone
 {
     public partial class App : Xamarin.Forms.Application
     {
+        public class NavigationContainerNames
+        {
+            public static string AuthenticationContainer = "InitialPage";
+            public static string MainContainer = "MainPage";
+        }
         public App()
         {
             InitializeComponent();
-            var tabbedNavigation = new FreshTabbedNavigationContainer();
-            tabbedNavigation.SelectedTabColor = Color.Black;
-            tabbedNavigation.BarBackgroundColor = Color.White;
-           
-            tabbedNavigation.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
-            tabbedNavigation.AddTab<MainPageModel>("", "home.png");
-            tabbedNavigation.AddTab<SearchPageModel>("", "search.png");
-            tabbedNavigation.AddTab<AddMediaPageModel>("", "add.png");
-            tabbedNavigation.AddTab<ShopPageModel>("", "shop.png");
-            tabbedNavigation.AddTab<ProfilePageModel>("", null);
-            //var page = FreshPageModelResolver.ResolvePageModel<MainPageModel>();
-            //var navigationPage = new FreshNavigationContainer(page);
-            MainPage = tabbedNavigation;
+            //var accessToken = Preferences.Get("accessToken", string.Empty);
+            var initialPage = FreshPageModelResolver.ResolvePageModel<InitialPageModel>();
+
+            var mainPageContainer = new FreshNavigationContainer(initialPage, NavigationContainerNames.AuthenticationContainer);
+
+            var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
+
+            tabbedPageContainer.SelectedTabColor = Color.Black;
+            tabbedPageContainer.BarBackgroundColor = Color.White;
+            tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+            tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
+            tabbedPageContainer.AddTab<SearchPageModel>("", "search.png");
+            tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
+            tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+            tabbedPageContainer.AddTab<ProfilePageModel>("", null);
+            //if(string.IsNullOrEmpty(accessToken))
+            MainPage = mainPageContainer;
         }
+
 
         protected override void OnStart()
         {
