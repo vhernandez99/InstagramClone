@@ -14,6 +14,7 @@ namespace InstagramClone.PageModels
         {
             //CoreMethods.PopPageModel(this);
             CoreMethods.SwitchOutRootNavigation(NavigationContainerNames.AuthenticationContainer);
+            //CoreMethods.PushPageModelWithNewNavigation<InitialPageModel>(data:null) ;
         }   
     }
 }

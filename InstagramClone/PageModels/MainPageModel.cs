@@ -3,6 +3,7 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace InstagramClone.PageModels
@@ -13,6 +14,59 @@ namespace InstagramClone.PageModels
         public ObservableCollection<Post> PostsCollection { get; set; }
         public Command ViewPostCommentsCommand => new Command<Post>(ViewPostComments);
         public Command PostCommentCommand => new Command<int>(PostComment);
+        public Command RefreshPostsCommand => new Command(RefreshPosts);
+
+        private async void RefreshPosts(object obj)
+        {
+            IsRefreshing = true;
+            PageNumber++;
+            PostsCollection.Clear();
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 150);
+            foreach (Post post in Posts)
+            {
+                PostsCollection.Add(post);
+            }
+            IsRefreshing = false;
+        }
+
+        public bool TaskInProcess { get; set; } = false;
+        private string _UserLoggedImageUrl;
+        public string UserLoggedImageUrl
+        {
+            set
+            {
+                _UserLoggedImageUrl = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _UserLoggedImageUrl;
+            }
+        }
+        public string UserNameLogged { get; set; }
+        private string _CommentText;
+        public string CommentText
+        {
+            set
+            {
+                _CommentText = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _CommentText;
+            }
+        }
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            set
+            {
+                _isRefreshing = value;
+                RaisePropertyChanged();
+            }
+            get => _isRefreshing;
+        }
         private async void PostComment(int postId)
         {
             if (TaskInProcess) { return; }
@@ -31,24 +85,6 @@ namespace InstagramClone.PageModels
             }
         }
 
-        public bool TaskInProcess { get; set; } = false;
-        public string UserLoggedImageUrl { get; set; }
-        public string UserLoggedUserName { get; set; }
-        private string _CommentText;
-        public string CommentText
-        {
-            set
-            {
-                _CommentText = value;
-                RaisePropertyChanged();
-            }
-            get
-            {
-                return _CommentText;
-            }
-        }
-
-
         private async void ViewPostComments(Post post)
         {
             await CoreMethods.PushPageModel<PostCommentsPageModel>(post);
@@ -60,25 +96,30 @@ namespace InstagramClone.PageModels
         {
             PostsCollection = new ObservableCollection<Post>();
             GetAllPosts();
-            GetUserLoggedInfo();
+            
         }
 
-        private async void GetUserLoggedInfo()
+        public async void GetUserLoggedInfo()
         {
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
-            UserLoggedUserName = userLoggedInfo.UserName;
+            UserNameLogged = userLoggedInfo.UserName;
         }
 
         public async void GetAllPosts()
         {
             PageNumber++;
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
-
+            PostsCollection.Clear();
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 150);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
             }
+        }
+        public override void Init(object initData)
+        {
+            GetUserLoggedInfo();
+            base.Init(initData);
         }
     }
 }

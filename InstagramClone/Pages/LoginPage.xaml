@@ -1,10 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="InstagramClone.Pages.LoginPage">
+             x:Class="InstagramClone.Pages.LoginPage"
+             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#33CC33">
+    <ContentPage.Resources>
+        <Style TargetType="entry:BorderlessEntry" Class="EntryStyle">
+            <Setter Property="BackgroundColor"
+                    Value="White"/>
+            <Setter Property="TextColor" Value="Black"/>
+        </Style>
+        <Style TargetType="Frame" Class="RoundedFrame">
+            <Setter Property="CornerRadius"
+                    Value="5"/>
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <Button Command="{Binding GoToMainPageCommand}"/>
-        </StackLayout>
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Frame Padding="0" BackgroundColor="White" HeightRequest="150" Margin="0,-25,0,0" CornerRadius="0">
+                <Image Source="slife" WidthRequest="100" HeightRequest="50" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White"/>
+            </Frame>
+            <Frame Grid.Row="1" CornerRadius="15" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" VerticalOptions="CenterAndExpand" >
+                <StackLayout Margin="10" Spacing="20" VerticalOptions="StartAndExpand">
+                    <Label Text="Iniciar sesion" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry  StyleClass="EntryStyle" Placeholder="Usuario" Text="{Binding UserName}"/>
+                    </Frame>
+                    <Frame StyleClass="RoundedFrame">
+                        <entry:BorderlessEntry StyleClass="EntryStyle" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
+                    </Frame>
+                    <Button Text="Iniciar sesion" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding LoginCommand}"/>
+                    <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="MediumBlue" FontSize="Medium" FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </Frame>
+
+
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

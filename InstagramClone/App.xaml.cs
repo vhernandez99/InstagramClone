@@ -6,6 +6,7 @@ using FreshMvvm;
 using InstagramClone.PageModels;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Essentials;
+using InstagramClone.Services;
 
 namespace InstagramClone
 {
@@ -19,21 +20,15 @@ namespace InstagramClone
         public App()
         {
             InitializeComponent();
+            var id = Preferences.Get("userId", 3);
+            
+            
             //var accessToken = Preferences.Get("accessToken", string.Empty);
             var initialPage = FreshPageModelResolver.ResolvePageModel<InitialPageModel>();
 
             var mainPageContainer = new FreshNavigationContainer(initialPage, NavigationContainerNames.AuthenticationContainer);
 
-            var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
-
-            tabbedPageContainer.SelectedTabColor = Color.Black;
-            tabbedPageContainer.BarBackgroundColor = Color.White;
-            tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
-            tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
-            tabbedPageContainer.AddTab<SearchPageModel>("", "search.png");
-            tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
-            tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
-            tabbedPageContainer.AddTab<ProfilePageModel>("", null);
+            
             //if(string.IsNullOrEmpty(accessToken))
             MainPage = mainPageContainer;
         }

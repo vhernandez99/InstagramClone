@@ -1,6 +1,7 @@
 ﻿using FreshMvvm;
 using InstagramClone.Models;
 using InstagramClone.Services;
+using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,8 +17,34 @@ namespace InstagramClone.PageModels
         public ObservableCollection<Comment> PostCommentsCollection { get; set; }
         public int PostId { get; set; }
         public string UserImageUrl { get; set; }
+        private string _CommentUserImageUrl;
+        public string CommentUserImageUrl
+        {
+            set
+            {
+                _CommentUserImageUrl = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _CommentUserImageUrl;
+            }
+        }
         public string PostDescription { get; set; }
         public bool TaskInProcess { get; set; } = false;
+        private string _UserLoggedImageUrl;
+        public string UserLoggedImageUrl
+        {
+            set
+            {
+                _UserLoggedImageUrl = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _UserLoggedImageUrl;
+            }
+        }
         public string PostUserName { get; set; }
         private string _CommentText;
         public string CommentText
@@ -36,14 +63,23 @@ namespace InstagramClone.PageModels
         {
             PostCommentsCollection.Clear();
             List<Comment> comments = await ApiService.GetPostComments(PostId);
+            
             foreach (Comment comment in comments)
             {
                 PostCommentsCollection.Add(comment);
             }
+            //CommentUserImageUrl = PostCommentsCollection.
         }
         public PostCommentsPageModel()
         {
             PostCommentsCollection = new ObservableCollection<Comment>();
+           
+        }
+        private async void GetUserLoggedInfo()
+        {
+            var userLoggedInfo = await ApiService.GetUserLoggedInfo();
+            UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
+
         }
         private async void PostComment(object obj)
         {
@@ -64,8 +100,10 @@ namespace InstagramClone.PageModels
             }
         }
 
+
         public  async override void Init(object initData)
         {
+            GetUserLoggedInfo();
             //casting
             Post post = (Post)initData;
             UserImageUrl = post.FullUserImageUrl;

@@ -1,7 +1,8 @@
 ﻿using InstagramClone.Models;
 using Newtonsoft.Json;
-using System;
+using Plugin.Media.Abstractions;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,32 +14,47 @@ namespace InstagramClone.Services
 {
     public static class ApiService
     {
-        public static async Task<bool> RegisterUser(string name,string lastName,string secondLastName,string email,string password,string phoneNumber,string tokenFirebase)
+        public static async Task<bool> RegisterUser(string name, string userName, string password, MediaFile file, byte[] userImageArray)
         {
-            var user = new User()
-            {
-                Name=name,
-                LastName=lastName,
-                SecondLastName=secondLastName,
-                Email=email,
-                Password=password,
-                PhoneNumber=phoneNumber,
-                TokenFirebase=tokenFirebase
-            };
+            string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
+
             var httpClient = new HttpClient();
-            var jsonRegister = JsonConvert.SerializeObject(user);
-            var content = new StringContent(jsonRegister, Encoding.UTF8, "application/json");
+            var content = new MultipartFormDataContent
+            {
+                {new StringContent(name),"Name" },
+                {new StringContent(userName),"UserName" },
+                {new StringContent(password),"Password" },
+                {new StringContent(tokenFirebase),"TokenFirebase" },
+            };
+            content.Add(new StreamContent(new MemoryStream(userImageArray)), "Image", file.Path);
             var ApiResponse = await httpClient.PostAsync(AppSettings.ApiUrl + "api/users/Register", content);
             if (!ApiResponse.IsSuccessStatusCode) return false;
             return true;
         }
-        public static async Task<bool> Login(string email, string password, string tokenfirebase)
+
+        public static async Task<bool> AddPost(string description, MediaFile file, byte[] postImageArray)
         {
+            await TokenValidator.CheckTokenValidity();
+            var id = Preferences.Get("userId", 0);
+            var httpClient = new HttpClient();
+            var content = new MultipartFormDataContent
+            {
+                { new StringContent(description), "Description" }
+            };
+            content.Add(new StreamContent(new MemoryStream(postImageArray)), "Image", file.Path);
+            var ApiResponse = await httpClient.PostAsync(AppSettings.ApiUrl + "api/posts/AddPost/" + id, content);
+            if (!ApiResponse.IsSuccessStatusCode) return false;
+            return true;
+        }
+
+        public static async Task<bool> Login(string user, string password)
+        {
+            string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
             var login = new User()
             {
-                Email = email,
+                UserName = user,
                 Password = password,
-                TokenFirebase = tokenfirebase
+                TokenFirebase = tokenFirebase
             };
             var httpclient = new HttpClient();
             var jsonRegister = JsonConvert.SerializeObject(login);
@@ -54,7 +70,7 @@ namespace InstagramClone.Services
             Preferences.Set("currentTime", UnixTime.GetCurrentTime());
             return true;
         }
-        public static async Task<List<Post>> GetAllPosts(int pageNumber,int pageSize)
+        public static async Task<List<Post>> GetAllPosts(int pageNumber, int pageSize)
         {
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
@@ -70,9 +86,9 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetPostComments/" + id));
             return JsonConvert.DeserializeObject<List<Comment>>(response);
         }
-        public static async Task<bool> AddPostComment(string description,int postId)
+        public static async Task<bool> AddPostComment(string description, int postId)
         {
-            var id = Preferences.Get("userId", 3);
+            var id = Preferences.Get("userId", 0);
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("acessToken", string.Empty));
@@ -80,7 +96,7 @@ namespace InstagramClone.Services
             {
                 Description = description,
                 UserId = id,
-                PostId=postId
+                PostId = postId
             };
             var jsonComment = JsonConvert.SerializeObject(comment);
             var content = new StringContent(jsonComment, Encoding.UTF8, "application/json");
@@ -90,7 +106,7 @@ namespace InstagramClone.Services
         }
         public static async Task<UserLogged> GetUserLoggedInfo()
         {
-            var id = Preferences.Get("userId", 3);
+            var id = Preferences.Get("userId", 0);
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("acessToken", string.Empty));
@@ -111,7 +127,7 @@ namespace InstagramClone.Services
                     var email = Preferences.Get("email", string.Empty);
                     var password = Preferences.Get("password", string.Empty);
                     string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
-                    await ApiService.Login(email, password, tokenFirebase);
+                    await ApiService.Login(email, password);
                 }
             }
         }

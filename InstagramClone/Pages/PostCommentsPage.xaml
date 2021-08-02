@@ -32,8 +32,9 @@
                     <DataTemplate>
                         <Grid RowDefinitions="Auto" ColumnDefinitions="Auto" >
                             <StackLayout Margin="15,0,0,0">
-                                <Frame Padding="0" WidthRequest="50" CornerRadius="25">
-                                    <Image Source="{Binding UserImageUrl}" Aspect="AspectFill" />
+                                <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25" >
+                                    <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" 
+                                            />
                                 </Frame>
                             </StackLayout>
                             <Label VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1" Margin="0,0,15,0">
@@ -52,8 +53,7 @@
             <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,Auto,*" Margin="15,20,0,5">
                 <Frame Padding="0" WidthRequest="50" HeightRequest="50" 
                                        CornerRadius="25">
-                    <Image Source="{Binding Path=BindingContext.UserImageUrl, Source={x:Reference Comentariospage }}" Aspect="AspectFill"/>
-                    
+                    <Image Source="{Binding UserLoggedImageUrl}" Aspect="AspectFill"/>
                 </Frame>
                 <entry:BorderlessEntry Grid.Column="1" Placeholder="Agregar un comentario..." FontSize="Small" Text="{Binding CommentText}"  />
                 <Label Text="Comentar" Grid.Column="2" VerticalTextAlignment="Center" TextColor="#427da4" HorizontalOptions="EndAndExpand" Margin="0,0,15,0">

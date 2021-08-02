@@ -10,6 +10,7 @@
         <Style TargetType="entry:BorderlessEntry" Class="EntryStyle">
             <Setter Property="BackgroundColor"
                     Value="White"/>
+            <Setter Property="TextColor" Value="Black"/>
         </Style>
         <Style TargetType="Frame" Class="RoundedFrame">
             <Setter Property="CornerRadius"
@@ -20,37 +21,37 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,*,50">
-            <Frame Padding="0" BackgroundColor="White" HeightRequest="150" Margin="0,-25,0,0" CornerRadius="10">
+            <Frame Padding="0" BackgroundColor="White" HeightRequest="150" Margin="0,-25,0,0" CornerRadius="0">
                 <Image Source="slife" WidthRequest="100" HeightRequest="50" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White"/>
             </Frame>
-            <Frame Grid.Row="1" CornerRadius="10" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" >
-                <StackLayout Margin="10" Spacing="20" VerticalOptions="CenterAndExpand">
+            <Frame Grid.Row="1" CornerRadius="15" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" >
+                <StackLayout Margin="10" Spacing="20" VerticalOptions="StartAndExpand">
                     
                     <Label Text="Registro" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
                     <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Nombre"  Text="{Binding Name}"/>
+                        <entry:BorderlessEntry  StyleClass="EntryStyle" Placeholder="Nombre"  Text="{Binding Name}"/>
                     </Frame>
                     <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Usuario" Text="{Binding User}"/>
+                        <entry:BorderlessEntry  StyleClass="EntryStyle" Placeholder="Usuario" Text="{Binding User}"/>
                     </Frame>
                     <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
+                        <entry:BorderlessEntry StyleClass="EntryStyle" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
                     </Frame>
                     <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry BackgroundColor="White" StyleClass="EntryStyle" Placeholder="Confirmar contraseña" IsPassword="True" Text="{Binding ConfirmPassword}" />
+                        <entry:BorderlessEntry StyleClass="EntryStyle" Placeholder="Confirmar contraseña" IsPassword="True" Text="{Binding ConfirmPassword}" />
                     </Frame>
                     <StackLayout Orientation="Horizontal">
-                        <Button ImageSource="selfie.png" BackgroundColor="White" WidthRequest="100" VerticalOptions="Start" CornerRadius="8" Command="{Binding SelectImageCommand}" 
-                                HorizontalOptions="StartAndExpand"/>
-                        <Frame Padding="0" WidthRequest="150" HeightRequest="150" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand"  
+                        <Button ImageSource="selfie.png"  BackgroundColor="White" WidthRequest="100" VerticalOptions="Start" CornerRadius="8" Command="{Binding SelectImageCommand}" 
+                                HorizontalOptions="Start"/>
+                        <Frame Padding="0" WidthRequest="150" HeightRequest="150" HorizontalOptions="EndAndExpand" VerticalOptions="StartAndExpand"  
                                BackgroundColor="Transparent" Margin="0,-20,0,0">
                             <Image Source="{Binding ImageUrl}" Aspect="AspectFill" BackgroundColor="Transparent"/>
                         </Frame>
                     </StackLayout>
-                    
-                    
-                    <Button Text="Crear cuenta" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding LoginCommand}"/>
-                    <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="Blue" FontSize="Medium">
+
+
+                    <Button Text="Crear cuenta" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding RegisterCommand}"/>
+                    <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="MediumBlue" FontAttributes="Bold" FontSize="Medium">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
                         </Label.GestureRecognizers>

@@ -1,9 +1,9 @@
 ﻿using FreshMvvm;
+using ImageToArray;
+using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace InstagramClone.PageModels
@@ -12,6 +12,7 @@ namespace InstagramClone.PageModels
 
     {
         public MediaFile file;
+
         private ImageSource _ImageUrl = "imagenseleccion.png";
         public ImageSource ImageUrl
         {
@@ -26,22 +27,34 @@ namespace InstagramClone.PageModels
             }
         }
         public Command GoToInitialPageCommand => new Command(GoToInitialPage);
-        public Command SelectImageCommand => new Command(SelectImage);
-        public Command LoginCommand => new Command(Login);
-        private void Login(object obj)
+        public Command SelectImageCommand => new Command(async () => await SelectImage());
+        public Command RegisterCommand => new Command(async () => await Register());
+        private async Task Register()
         {
             if (!RegisterIsValid())
             {
-                CoreMethods.DisplayAlert("", "Favor de llenar todos los campos", "Ok");
+                await CoreMethods.DisplayAlert("", "Favor de llenar todos los campos", "Ok");
+                return;
             }
             if (!PasswordsAreEqual())
             {
-                CoreMethods.DisplayAlert("", "Las contraseñas no coinciden", "Ok");
+                await CoreMethods.DisplayAlert("", "Las contraseñas no coinciden", "Ok");
+                return;
             }
             if (ImageUrl.ToString().Contains("imagenseleccion.png"))
             {
-                CoreMethods.DisplayAlert("", "Favor de seleccionar una foto de perfil", "Ok");
+                await CoreMethods.DisplayAlert("", "Favor de seleccionar una foto de perfil", "Ok");
+                return;
             }
+            var imageArray = FromFile.ToArray(file.GetStream());
+            var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray);
+            if (response)
+            {
+                await CoreMethods.DisplayAlert("", "Cuenta creada correctamente", "Ok");
+                await CoreMethods.PushPageModel<LoginPageModel>();
+            }
+
+
         }
         private bool RegisterIsValid()
         {
@@ -114,9 +127,9 @@ namespace InstagramClone.PageModels
         }
 
 
-        private async void SelectImage(object obj)
+        private async Task SelectImage()
         {
-            if(!CrossMedia.Current.IsPickPhotoSupported)
+            if (!CrossMedia.Current.IsPickPhotoSupported)
             {
                 await CoreMethods.DisplayAlert("Error", "Tu dispositivo no soporta esta herramienta", "Ok");
                 return;
@@ -133,7 +146,7 @@ namespace InstagramClone.PageModels
 
         private void GoToInitialPage(object obj)
         {
-            
+
             CoreMethods.PushPageModel<InitialPageModel>();
         }
     }

@@ -5,7 +5,13 @@
     <ContentPage.Content>
         <StackLayout>
             <Button Command="{Binding GoToInitialPageCommand}" Text="Ir a pagina inicial"/>
-            <Button/>
+            <Frame Padding="0" WidthRequest="300" HeightRequest="300">
+                <Image Source="test12" Aspect="AspectFill"/>
+            </Frame>
+            <Frame Padding="0" WidthRequest="300" HeightRequest="300">
+                <Image Source="test11" Aspect="AspectFill"/>
+            </Frame>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

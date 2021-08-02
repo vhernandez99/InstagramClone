@@ -20,7 +20,7 @@
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Row="1">
-                <RefreshView>
+                <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshPostsCommand}">
                     <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV">
                     <CollectionView.Header>
                         <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
@@ -55,7 +55,7 @@
                                 <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
                                     <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
                                        CornerRadius="15">
-                                        <Image Source="{Binding UserImageUrl}" Aspect="AspectFill"/>
+                                        <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill"/>
                                     </Frame>
                                     <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" FontAttributes="Bold"/>
                                     <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
@@ -70,7 +70,7 @@
                                     <Image Source="savepost" WidthRequest="35" HorizontalOptions="EndAndExpand"/>
                                     <Image/>
                                 </StackLayout>
-                                <StackLayout Margin="7,0,0,0">
+                                <StackLayout Margin="7,-15,0,0">
                                         <!--<Label Text="70 views" TextColor="Black" FontAttributes="Bold"/>-->
                                         <Label Grid.Row="1" Text="Ver todos los comentarios" TextColor="Gray">
                                             <Label.GestureRecognizers>
@@ -89,7 +89,7 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal">
+                                        <StackLayout Orientation="Horizontal" Margin="0,-10,0,0">
                                             <!--<Label TextColor="Black" FontAttributes="Bold" VerticalTextAlignment="Center">
                                                 <Label.FormattedText>
                                                     <FormattedString>
@@ -112,6 +112,7 @@
                                                 </Label.GestureRecognizers>
                                             </Label>
                                         </StackLayout>
+                                        <BoxView HeightRequest="1" Color="LightGray"></BoxView>
                                         <!--<Label Text="57 seconds ago" TextColor="Gray" FontSize="Caption"/>-->
                                 </StackLayout>
                             </StackLayout>

@@ -7,7 +7,6 @@ namespace InstagramClone.Models
     public class PostAdd
     {
         public string Description { get; set; }
-        public int UserId { get; set; }
         public byte[] ImageArray { get; set; }
     }
 }

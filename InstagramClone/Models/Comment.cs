@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstagramClone.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace InstagramClone.Models
         public string FullComment => Description + " " + UserName;
         public string PostDescription { get; set; }
         public string UserImageUrl { get; set; }
+        public string FullUserImageUrl => AppSettings.ApiUrl + UserImageUrl;
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstagramClone.PageModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,16 @@ namespace InstagramClone.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class InitialPage : ContentPage
     {
-        public InitialPage()
+       
+        public InitialPage(MainPageModel viewmodel)
         {
             InitializeComponent();
+           
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            
         }
     }
 }
