@@ -5,7 +5,9 @@
 			 NavigationPage.HasNavigationBar="False"
 			 BackgroundColor="White"
              xmlns:entry="clr-namespace:InstagramClone.Helper"
-             x:Name="MainPage2">
+             x:Name="MainPage2"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton">
 
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,Auto,Auto">
@@ -21,8 +23,12 @@
             </StackLayout>
             <StackLayout Grid.Row="1">
                 <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshPostsCommand}">
-                    <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV">
-                    <CollectionView.Header>
+                    <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV" RemainingItemsThreshold="1" 
+                                    RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}" 
+                                    sk:Skeleton.IsParent="True"
+                                    sk:Skeleton.IsBusy="True"
+                                    sk:Skeleton.Animation="{sk:DefaultAnimation HorizontalShake }">
+                        <CollectionView.Header>
                         <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
 							Margin="0,0,0,0">
                             <CollectionView.ItemsLayout>
@@ -55,13 +61,13 @@
                                 <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
                                     <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
                                        CornerRadius="15">
-                                        <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill"/>
+                                        <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" />
                                     </Frame>
                                     <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" FontAttributes="Bold"/>
                                     <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
                                 </StackLayout>
-                                <Frame Padding="0">
-                                    <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"/>
+                                <Frame Padding="0" WidthRequest="300" HeightRequest="300">
+                                    <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"  sk:Skeleton.Hide="True"/>
                                 </Frame>
                                 <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
                                     <Image Source="heart" WidthRequest="25"/>
@@ -83,7 +89,7 @@
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span Text="{Binding UserName}" TextColor="Black" FontAttributes="Bold"/>
-                                                        <Span Text="  "/>
+                                                        <Span Text=" "/>
                                                         <Span  Text="{Binding Description}"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>

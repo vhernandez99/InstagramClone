@@ -4,44 +4,37 @@
              x:Class="InstagramClone.Pages.LoginPage"
              xmlns:entry="clr-namespace:InstagramClone.Helper"
              NavigationPage.HasNavigationBar="False"
-             BackgroundColor="#33CC33">
-    <ContentPage.Resources>
-        <Style TargetType="entry:BorderlessEntry" Class="EntryStyle">
-            <Setter Property="BackgroundColor"
-                    Value="White"/>
-            <Setter Property="TextColor" Value="Black"/>
-        </Style>
-        <Style TargetType="Frame" Class="RoundedFrame">
-            <Setter Property="CornerRadius"
-                    Value="5"/>
-            <Setter Property="Padding" Value="0" />
-        </Style>
-    </ContentPage.Resources>
+             BackgroundColor="White">
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,*,Auto">
-            <Frame Padding="0" BackgroundColor="White" HeightRequest="150" Margin="0,-25,0,0" CornerRadius="0">
-                <Image Source="slife" WidthRequest="100" HeightRequest="50" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White"/>
+        <Grid RowDefinitions="100,0.1*,0.1*,*">
+            <Frame Grid.Row="1" Padding="0" Margin="0,-25,0,0" BackgroundColor="Transparent" CornerRadius="0" >
+                <Image Source="slife" Aspect="AspectFit" WidthRequest="100" HeightRequest="100" />
             </Frame>
-            <Frame Grid.Row="1" CornerRadius="15" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" VerticalOptions="CenterAndExpand" >
-                <StackLayout Margin="10" Spacing="20" VerticalOptions="StartAndExpand">
-                    <Label Text="Iniciar sesion" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
-                    <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry  StyleClass="EntryStyle" Placeholder="Usuario" Text="{Binding UserName}"/>
-                    </Frame>
-                    <Frame StyleClass="RoundedFrame">
-                        <entry:BorderlessEntry StyleClass="EntryStyle" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
-                    </Frame>
-                    <Button Text="Iniciar sesion" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding LoginCommand}"/>
-                    <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="MediumBlue" FontSize="Medium" FontAttributes="Bold">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </StackLayout>
-            </Frame>
+            <StackLayout Grid.Row="3">
+                <Grid ColumnDefinitions="20,*,20">
+                    <StackLayout Grid.Column="1" Spacing="15">
+                        <Label Text="Iniciar sesion" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
+                        <Frame Padding="0" BackgroundColor="Transparent" BorderColor="Black" CornerRadius="3" >
+                            <entry:BorderlessEntry HorizontalTextAlignment="Center" Placeholder="Usuario" Text="{Binding UserName}"/>
+                        </Frame>
+                        <Frame Padding="0" BackgroundColor="Transparent" BorderColor="Black" CornerRadius="3">
+                            <entry:BorderlessEntry HorizontalTextAlignment="Center" Placeholder="Contraseña" IsPassword="True" Text="{Binding Password}" />
+                        </Frame>
+                        <Button Text="Iniciar sesion" CornerRadius="3" BackgroundColor="Black" TextColor="White" Command="{Binding LoginCommand}"/>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                            <Label Text="¿No tienes una cuenta?" TextColor="Black"/>
+                            <Label Text="Registrate" TextColor="MediumBlue"  FontAttributes="Bold">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+                
 
-
-
+            </StackLayout>
+            
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -14,7 +14,6 @@ namespace InstagramClone.PageModels
     public class AddMediaPageModel: FreshBasePageModel
     {
         public MediaFile file;
-        private ImageSource _ImageUrl = "imagenseleccion.png";
         private string _Description;
         public string Description
         {
@@ -54,7 +53,20 @@ namespace InstagramClone.PageModels
                 return _UserNameLogged;
             }
         }
-        public bool TaskInProcess { get; set; } = false;
+        private bool _TaskInProcess = false;
+        public bool TaskInProcess
+        {
+            set
+            {
+                _TaskInProcess = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _TaskInProcess;
+            }
+        }
+        private ImageSource _ImageUrl = "";
         public ImageSource ImageUrl
         {
             set
@@ -67,17 +79,42 @@ namespace InstagramClone.PageModels
                 return _ImageUrl;
             }
         }
-        public Command SelectImageCommand => new Command(async () => await SelectImage());
+        public Command OpenGalleryCommand => new Command(async () => await OpenGallery());
+        public Command OpenCameraCommand => new Command(async () => await OpenCamera());
+
+        private async Task OpenCamera()
+        {
+            if (!CrossMedia.Current.IsTakePhotoSupported)
+            {
+                await CoreMethods.DisplayAlert("Error", "Tu dispositivo no soporta esta herramienta", "Ok");
+                return;
+            }
+            file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+            {
+                CompressionQuality = 25
+            });
+            if (file == null)
+                return;
+            ImageUrl = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                return stream;
+            });
+        }
+
         public Command AddPostCommand => new Command(async () => await AddPost());
 
-        private async Task SelectImage()
+        private async Task OpenGallery()
         {
             if (!CrossMedia.Current.IsPickPhotoSupported)
             {
                 await CoreMethods.DisplayAlert("Error", "Tu dispositivo no soporta esta herramienta", "Ok");
                 return;
             }
-            file = await CrossMedia.Current.PickPhotoAsync();
+            file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+            {
+                CompressionQuality = 25
+            });
             if (file == null)
                 return;
             ImageUrl = ImageSource.FromStream(() =>
@@ -102,27 +139,37 @@ namespace InstagramClone.PageModels
         {
             if (TaskInProcess) { return; }
             TaskInProcess = true;
-            if (ImageUrl.ToString().Contains("imagenseleccion.png"))
+            try
             {
-                await CoreMethods.DisplayAlert("", "Favor de agregar una imagen a la publicacion", "Ok");
-                return;
+                if (string.IsNullOrEmpty(ImageUrl.ToString())||(string.IsNullOrEmpty(Description)))
+                {
+                    await CoreMethods.DisplayAlert("", "Favor de agregar una imagen y descripcion a la publicacion", "Ok");
+                    TaskInProcess = false;
+                    return;
+                }
+                var imageArray = FromFile.ToArray(file.GetStream());
+
+                var response = await ApiService.AddPost(Description, file, imageArray);
+                if (response)
+                {
+                    await CoreMethods.DisplayAlert("", "Publicacion creada con exito", "Ok");
+                    ImageUrl = "";
+                    TaskInProcess = false;
+                }
+                else
+                {
+                    await CoreMethods.DisplayAlert("", "Error al subir la publicacion", "Ok");
+                    TaskInProcess = false;
+                    return;
+                }
             }
-            if(String.IsNullOrEmpty(Description))
+            catch (Exception e)
             {
-                await CoreMethods.DisplayAlert("", "Favor de agregar una descripcion a tu publicacion", "Ok");
-                return;
-            }
-            var imageArray = FromFile.ToArray(file.GetStream());
-            
-            var response = await ApiService.AddPost(Description, file, imageArray);
-            if (response)
-            {
-                await CoreMethods.DisplayAlert("", "Publicacion creada con exito", "Ok");
+                await CoreMethods.DisplayAlert("", e.Message, "Ok");
                 TaskInProcess = false;
             }
-            else
+            finally
             {
-                await CoreMethods.DisplayAlert("", "Error al subir la publicacion", "Ok");
                 TaskInProcess = false;
             }
         }

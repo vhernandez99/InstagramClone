@@ -4,39 +4,49 @@
              x:Class="InstagramClone.Pages.AddMediaPage"
              BackgroundColor="White"
              xmlns:entry="clr-namespace:InstagramClone.Helper"
-             >
+             NavigationPage.HasNavigationBar="False">
+             
+             
+    
     <ContentPage.Content>
-        <StackLayout>
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto" BackgroundColor="White" Margin="10">
-                <Frame Padding="0" WidthRequest="100" BackgroundColor="Transparent">
-                    <Image Source="slife.png"/>
-                </Frame>
-                <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="StartAndExpand" Margin="10">
+        <Grid RowDefinitions="100,*,100" ColumnDefinitions="100,*,100">
+            <Frame Grid.Column="1" Padding="0" WidthRequest="150" BackgroundColor="Transparent">
+                <Image Source="slife.png" Aspect="AspectFit"/>
+            </Frame>
+            <StackLayout Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
+                <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="StartAndExpand" >
                     <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25" BackgroundColor="Transparent">
                         <Image Source="{Binding UserLoggedImageUrl}" Aspect="AspectFill"/>
                     </Frame>
                     <Label Text="{Binding UserNameLogged}" TextColor="Black" VerticalTextAlignment="Center"  FontAttributes="Bold"/>
                 </StackLayout>
-                <Frame Grid.Row="2" Padding="0" Margin="10" CornerRadius="8">
-                    <entry:BorderlessEntry Placeholder="Comparte lo que pienses con el mundo..." Text="{Binding Description}"/>
+                <Frame Grid.Row="2" Padding="0" CornerRadius="8">
+                    <entry:BorderlessEntry Placeholder="¿Que estas pensando?..." Text="{Binding Description}"/>
                 </Frame>
-                <Grid Grid.Row="3" Margin="10" ColumnDefinitions="0.5*,*">
-                    <Frame Padding="0"  BackgroundColor="Transparent" HorizontalOptions="CenterAndExpand"  
-                           WidthRequest="300" HeightRequest="250"  Grid.ColumnSpan="2" >
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SelectImageCommand}"/>
-                        </Frame.GestureRecognizers>
-                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
-                    </Frame>
-                    <StackLayout Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalOptions="CenterAndExpand">
-
-                        <Button HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" BackgroundColor="Black" Text="Crear publicacion" 
-                                TextColor="White" CornerRadius="8" Command="{Binding AddPostCommand}"/>
+                <StackLayout Orientation="Horizontal">
+                    <Image Source="gallery.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenGalleryCommand}"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="opencamera.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenCameraCommand}"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <Grid RowDefinitions="*">
+                    <StackLayout>
+                        <Frame Padding="0" BackgroundColor="Transparent" HeightRequest="300" WidthRequest="300">
+                            <Image Source="{Binding ImageUrl}" Aspect="Fill"/>
+                        </Frame>
+                        <Button Command="{Binding AddPostCommand}"/>
                     </StackLayout>
+                    <ActivityIndicator IsRunning="{Binding TaskInProcess}"  IsVisible="{Binding TaskInProcess}" Color="Red" WidthRequest="50" HeightRequest="50" HorizontalOptions="CenterAndExpand" />
+
                 </Grid>
-                
-                
-            </Grid>
-        </StackLayout>
+            </StackLayout>
+            
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

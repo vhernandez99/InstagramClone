@@ -15,20 +15,7 @@ namespace InstagramClone.PageModels
         public Command ViewPostCommentsCommand => new Command<Post>(ViewPostComments);
         public Command PostCommentCommand => new Command<int>(PostComment);
         public Command RefreshPostsCommand => new Command(RefreshPosts);
-
-        private async void RefreshPosts(object obj)
-        {
-            IsRefreshing = true;
-            PageNumber++;
-            PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 150);
-            foreach (Post post in Posts)
-            {
-                PostsCollection.Add(post);
-            }
-            IsRefreshing = false;
-        }
-
+        public Command RemainingItemsThresholdReachedCommand => new Command(RemainingItemsThresholdReached);
         public bool TaskInProcess { get; set; } = false;
         private string _UserLoggedImageUrl;
         public string UserLoggedImageUrl
@@ -67,6 +54,7 @@ namespace InstagramClone.PageModels
             }
             get => _isRefreshing;
         }
+        private int PageNumber = 0;
         private async void PostComment(int postId)
         {
             if (TaskInProcess) { return; }
@@ -84,41 +72,56 @@ namespace InstagramClone.PageModels
                 TaskInProcess = false;
             }
         }
-
         private async void ViewPostComments(Post post)
         {
             await CoreMethods.PushPageModel<PostCommentsPageModel>(post);
         }
-
-        private int PageNumber = 0;
-
+        private async void RefreshPosts(object obj)
+        {
+            IsRefreshing = true;
+            PageNumber=1;
+            PostsCollection.Clear();
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            foreach (Post post in Posts)
+            {
+                PostsCollection.Add(post);
+            }
+            IsRefreshing = false;
+        }
+        private async void RemainingItemsThresholdReached(object obj)
+        {
+            PageNumber++;
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            foreach (Post post in Posts)
+            {
+                PostsCollection.Add(post);
+            }
+        }
+        public async void GetAllPosts()
+        {
+            PageNumber = 1;
+            PostsCollection.Clear();
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            foreach (Post post in Posts)
+            {
+                PostsCollection.Add(post);
+            }
+        }
         public MainPageModel()
         {
             PostsCollection = new ObservableCollection<Post>();
-            GetAllPosts();
-            
         }
-
         public async void GetUserLoggedInfo()
         {
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
         }
-
-        public async void GetAllPosts()
-        {
-            PageNumber++;
-            PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 150);
-            foreach (Post post in Posts)
-            {
-                PostsCollection.Add(post);
-            }
-        }
+       
         public override void Init(object initData)
         {
             GetUserLoggedInfo();
+            GetAllPosts();
             base.Init(initData);
         }
     }
