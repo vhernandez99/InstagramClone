@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InstagramClone.Pages.UsersListPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="White" 
+             x:Name="userlist">
+    <ContentPage.Content>
+        <Grid>
+            <CollectionView ItemsSource="{Binding UsersList}" x:Name="UsersCv" SelectionMode="Single" 
+                            
+                            >
+
+                <CollectionView.Header>
+                    <StackLayout>
+                        <Label Text="Usuarios" Margin="15,15,0,0" TextColor="Black" FontSize="45" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand"/>
+                    </StackLayout>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToMessageCommand,Source={x:Reference userlist}}" CommandParameter="{Binding .}"/>
+                            </StackLayout.GestureRecognizers>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Red" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <StackLayout Orientation="Horizontal" Margin="15,0,0,0">
+                                <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25" 
+                                   IsClippedToBounds="True">
+                                    <Image Source="{Binding FullImageUrl}" Aspect="AspectFill"/>
+                                </Frame>
+                                <StackLayout>
+                                    <Label Text="{Binding Name}">
+                                        
+                                    </Label>
+                                    <Label >
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <FormattedString.Spans>
+                                                    <Span Text="@"/>
+                                                    <Span Text="{Binding UserName}"/>
+                                                </FormattedString.Spans>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+
+                                    </Label>
+
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

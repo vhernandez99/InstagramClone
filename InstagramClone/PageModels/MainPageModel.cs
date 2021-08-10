@@ -11,7 +11,19 @@ namespace InstagramClone.PageModels
     public class MainPageModel : FreshBasePageModel
     {
         public ObservableCollection<Story> Stories => new ObservableCollection<Story>(Story.GetAllStories());
-        public ObservableCollection<Post> PostsCollection { get; set; }
+        private ObservableCollection<Post> _postCollection;
+        public ObservableCollection<Post> PostsCollection
+        {
+            get
+            {
+                return _postCollection;
+            }
+            set
+            {
+                _postCollection = value;
+                RaisePropertyChanged();
+            }
+        }
         public Command ViewPostCommentsCommand => new Command<Post>(ViewPostComments);
         public Command PostCommentCommand => new Command<int>(PostComment);
         public Command RefreshPostsCommand => new Command(RefreshPosts);
@@ -54,6 +66,7 @@ namespace InstagramClone.PageModels
             }
             get => _isRefreshing;
         }
+
         private int PageNumber = 0;
         private async void PostComment(int postId)
         {
@@ -88,7 +101,7 @@ namespace InstagramClone.PageModels
             }
             IsRefreshing = false;
         }
-        private async void RemainingItemsThresholdReached(object obj)
+        private async void RemainingItemsThresholdReached()
         {
             PageNumber++;
             List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);

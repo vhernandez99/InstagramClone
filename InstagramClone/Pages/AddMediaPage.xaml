@@ -5,9 +5,6 @@
              BackgroundColor="White"
              xmlns:entry="clr-namespace:InstagramClone.Helper"
              NavigationPage.HasNavigationBar="False">
-             
-             
-    
     <ContentPage.Content>
         <Grid RowDefinitions="100,*,100" ColumnDefinitions="100,*,100">
             <Frame Grid.Column="1" Padding="0" WidthRequest="150" BackgroundColor="Transparent">

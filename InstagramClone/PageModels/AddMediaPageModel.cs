@@ -81,7 +81,6 @@ namespace InstagramClone.PageModels
         }
         public Command OpenGalleryCommand => new Command(async () => await OpenGallery());
         public Command OpenCameraCommand => new Command(async () => await OpenCamera());
-
         private async Task OpenCamera()
         {
             if (!CrossMedia.Current.IsTakePhotoSupported)
@@ -91,7 +90,7 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
-                CompressionQuality = 25
+                CompressionQuality = 35
             });
             if (file == null)
                 return;
@@ -101,9 +100,7 @@ namespace InstagramClone.PageModels
                 return stream;
             });
         }
-
         public Command AddPostCommand => new Command(async () => await AddPost());
-
         private async Task OpenGallery()
         {
             if (!CrossMedia.Current.IsPickPhotoSupported)
@@ -113,7 +110,7 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
             {
-                CompressionQuality = 25
+                CompressionQuality = 35
             });
             if (file == null)
                 return;
@@ -134,7 +131,6 @@ namespace InstagramClone.PageModels
         {
             GetUserLoggedInfo();
         }
-         
         private async Task AddPost()
         {
             if (TaskInProcess) { return; }
@@ -173,7 +169,6 @@ namespace InstagramClone.PageModels
                 TaskInProcess = false;
             }
         }
-        
     }
 
 }

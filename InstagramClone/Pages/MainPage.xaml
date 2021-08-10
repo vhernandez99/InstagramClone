@@ -8,10 +8,9 @@
              x:Name="MainPage2"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton">
-
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,Auto,Auto">
-            <StackLayout Orientation="Horizontal" Margin="15,0,15,0" BackgroundColor="Transparent"> 
+            <StackLayout Orientation="Horizontal" Margin="15,0,15,0" BackgroundColor="Transparent">
                 <Frame WidthRequest="100"  Padding="0" BackgroundColor="Transparent" HorizontalOptions="StartAndExpand" 
                        VerticalOptions="StartAndExpand">
                     <Image Source="slife.png"/>
@@ -23,60 +22,59 @@
             </StackLayout>
             <StackLayout Grid.Row="1">
                 <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshPostsCommand}">
-                    <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV" RemainingItemsThreshold="1" 
-                                    RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}" 
-                                    sk:Skeleton.IsParent="True"
-                                    sk:Skeleton.IsBusy="True"
-                                    sk:Skeleton.Animation="{sk:DefaultAnimation HorizontalShake }">
+                    <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV" Margin="0" RemainingItemsThreshold="1" 
+                                    RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                                    >
                         <CollectionView.Header>
-                        <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
+                            <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
 							Margin="0,0,0,0">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Horizontal" >
-                                </LinearItemsLayout>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackLayout>
-                                        <Frame Padding="5" WidthRequest="65" HeightRequest="65"
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" >
+                                    </LinearItemsLayout>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout>
+                                            <Frame Padding="5" WidthRequest="65" HeightRequest="65"
 								   Margin="8,0,8,0" BorderColor="Red" 
 							       CornerRadius="50"
 								   IsClippedToBounds="True">
-                                            <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
+                                                <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
 							           CornerRadius="50"
 								       IsClippedToBounds="True">
-                                                <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                                </Frame>
                                             </Frame>
-                                        </Frame>
-                                        <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
-                                        <BoxView HeightRequest="1" Color="#f7f7f7"></BoxView>
-                                    </StackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </CollectionView.Header>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout Margin="0,0,0,0">
-                                <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                    <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
+                                            <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
+                                            <BoxView HeightRequest="1" Color="#f7f7f7"></BoxView>
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Margin="0,0,0,0">
+                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
+                                        <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
                                        CornerRadius="15">
-                                        <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" />
+                                            <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" />
+                                        </Frame>
+                                        <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" 
+                                               FontAttributes="Bold"/>
+                                        <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
+                                    </StackLayout>
+                                    <Frame Padding="0" WidthRequest="300" HeightRequest="300">
+                                        <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"  sk:Skeleton.Hide="True"/>
                                     </Frame>
-                                    <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" FontAttributes="Bold"/>
-                                    <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
-                                </StackLayout>
-                                <Frame Padding="0" WidthRequest="300" HeightRequest="300">
-                                    <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"  sk:Skeleton.Hide="True"/>
-                                </Frame>
-                                <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                    <Image Source="heart" WidthRequest="25"/>
-                                    <Image Source="comment" WidthRequest="55"/>
-                                    <Image Source="message" WidthRequest="35"/>
-                                    <Image Source="savepost" WidthRequest="35" HorizontalOptions="EndAndExpand"/>
-                                    <Image/>
-                                </StackLayout>
-                                <StackLayout Margin="7,-15,0,0">
+                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
+                                        <Image Source="heart" WidthRequest="25"/>
+                                        <Image Source="comment" WidthRequest="55"/>
+                                        <Image Source="message" WidthRequest="35"/>
+                                        <Image Source="savepost" WidthRequest="35" HorizontalOptions="EndAndExpand"/>
+                                        <Image/>
+                                    </StackLayout>
+                                    <StackLayout Margin="7,-15,0,0">
                                         <!--<Label Text="70 views" TextColor="Black" FontAttributes="Bold"/>-->
                                         <Label Grid.Row="1" Text="Ver todos los comentarios" TextColor="Gray">
                                             <Label.GestureRecognizers>
@@ -120,17 +118,13 @@
                                         </StackLayout>
                                         <BoxView HeightRequest="1" Color="LightGray"></BoxView>
                                         <!--<Label Text="57 seconds ago" TextColor="Gray" FontSize="Caption"/>-->
+                                    </StackLayout>
                                 </StackLayout>
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-                    
-        </RefreshView>
-               
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
             </StackLayout>
         </Grid>
-
-        
     </ContentPage.Content>
 </ContentPage>

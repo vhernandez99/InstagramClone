@@ -32,8 +32,6 @@ namespace InstagramClone
             //tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
             
             var initialPage = FreshPageModelResolver.ResolvePageModel<InitialPageModel>();
-     
-
             var mainPageContainer = new FreshNavigationContainer(initialPage, NavigationContainerNames.AuthenticationContainer);
             
             //if(string.IsNullOrEmpty(accessToken))

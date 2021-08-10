@@ -75,8 +75,16 @@ namespace InstagramClone.Services
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
-            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetAllPosts?sort=asc&pageNumber={0}&pageSize={1}", pageNumber, pageSize));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetAllPosts?sort=desc&pageNumber={0}&pageSize={1}", pageNumber, pageSize));
             return JsonConvert.DeserializeObject<List<Post>>(response);
+        }
+        public static async Task<List<UsersGetList>> GetAllUsers()
+        {
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetAllUsers"));
+            return JsonConvert.DeserializeObject<List<UsersGetList>>(response);
         }
         public static async Task<List<Comment>> GetPostComments(int id)
         {

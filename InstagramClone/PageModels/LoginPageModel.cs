@@ -61,7 +61,7 @@ namespace InstagramClone.PageModels
                 tabbedPageContainer.BarBackgroundColor = Color.White;
                 tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
-                tabbedPageContainer.AddTab<SearchPageModel>("", "search.png");
+                tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
                 tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
