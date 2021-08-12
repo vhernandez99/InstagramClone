@@ -17,7 +17,8 @@
                 </Frame>
                 <StackLayout Orientation="Horizontal" Spacing="30">
                     <Image  Source="heart" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
-                    <Image Source="messenger" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
+                    <ImageButton Source="messenger" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"
+                                 Command="{Binding GoToUsersListPageCommand}"/>
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Row="1">

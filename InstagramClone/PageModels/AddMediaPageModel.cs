@@ -1,5 +1,6 @@
 ﻿using FreshMvvm;
 using ImageToArray;
+using InstagramClone.Models;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -122,10 +123,9 @@ namespace InstagramClone.PageModels
         }
         private async void GetUserLoggedInfo()
         {
-            var userLoggedInfo = await ApiService.GetUserLoggedInfo();
+            UserLogged userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
-
         }
         public  override void Init(object initData)
         {

@@ -28,6 +28,16 @@ namespace InstagramClone.PageModels
         public Command PostCommentCommand => new Command<int>(PostComment);
         public Command RefreshPostsCommand => new Command(RefreshPosts);
         public Command RemainingItemsThresholdReachedCommand => new Command(RemainingItemsThresholdReached);
+        public Command GoToUsersListPageCommand
+        {
+            get
+            {
+                return new Command(async () => {
+                    //Push A Page Model
+                    await CoreMethods.PushPageModel<UsersListPageModel>();
+                });
+            }
+        }
         public bool TaskInProcess { get; set; } = false;
         private string _UserLoggedImageUrl;
         public string UserLoggedImageUrl
@@ -129,6 +139,7 @@ namespace InstagramClone.PageModels
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
+            
         }
        
         public override void Init(object initData)

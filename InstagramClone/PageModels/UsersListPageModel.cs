@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -15,8 +16,6 @@ namespace InstagramClone.PageModels
     {
         public ObservableCollection<UsersGetList> UsersList { get; set; }
         public Command GoToMessageCommand => new Command<UsersGetList>(GoToMessage);
-        
-
         UsersGetList _selectedUser = null;
         public UsersGetList SelectedUser
         {
@@ -34,23 +33,31 @@ namespace InstagramClone.PageModels
             SelectedUser = null;
         }
 
-        public async void GetAllUsers()
+        public async Task GetAllUsers()
         {
-            List <UsersGetList> users = await ApiService.GetAllUsers();
-            foreach(UsersGetList user in users)
+            try
             {
-                UsersList.Add(user);
+                List<UsersGetList> users = await ApiService.GetAllUsers();
+                foreach (UsersGetList user in users)
+                {
+                    UsersList.Add(user);
+                }
             }
+            catch (Exception r)
+            {
+                await CoreMethods.DisplayAlert("GetAllUsers", r.Message, "Ok");
+                return;
+            }
+            
         }
         public UsersListPageModel()
         {
             UsersList = new ObservableCollection<UsersGetList>();
-            
         }
 
-        public override void Init(object initData)
+        public async override void Init(object initData)
         {
-            GetAllUsers();
+            await GetAllUsers();
             base.Init(initData);
         }
 

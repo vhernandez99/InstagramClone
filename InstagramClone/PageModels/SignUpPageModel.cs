@@ -29,50 +29,6 @@ namespace InstagramClone.PageModels
         public Command GoToInitialPageCommand => new Command(GoToInitialPage);
         public Command SelectImageCommand => new Command(async () => await SelectImage());
         public Command RegisterCommand => new Command(async () => await Register());
-        private async Task Register()
-        {
-            if (!RegisterIsValid())
-            {
-                await CoreMethods.DisplayAlert("", "Favor de llenar todos los campos", "Ok");
-                return;
-            }
-            if (!PasswordsAreEqual())
-            {
-                await CoreMethods.DisplayAlert("", "Las contraseñas no coinciden", "Ok");
-                return;
-            }
-            if (ImageUrl.ToString().Contains("imagenseleccion.png"))
-            {
-                await CoreMethods.DisplayAlert("", "Favor de seleccionar una foto de perfil", "Ok");
-                return;
-            }
-            var imageArray = FromFile.ToArray(file.GetStream());
-            var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray);
-            if (response)
-            {
-                await CoreMethods.DisplayAlert("", "Cuenta creada correctamente", "Ok");
-                await CoreMethods.PushPageModel<LoginPageModel>();
-            }
-
-
-        }
-        private bool RegisterIsValid()
-        {
-            if (!(string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword)))
-            {
-                return true;
-            }
-            return false;
-        }
-        private bool PasswordsAreEqual()
-        {
-            if (Password == ConfirmPassword)
-            {
-                return true;
-            }
-            return false;
-        }
-
         private string _Name;
         public string Name
         {
@@ -125,8 +81,49 @@ namespace InstagramClone.PageModels
                 return _ConfirmPassword;
             }
         }
+        private async Task Register()
+        {
+            if (!RegisterIsValid())
+            {
+                await CoreMethods.DisplayAlert("", "Favor de llenar todos los campos", "Ok");
+                return;
+            }
+            if (!PasswordsAreEqual())
+            {
+                await CoreMethods.DisplayAlert("", "Las contraseñas no coinciden", "Ok");
+                return;
+            }
+            if (ImageUrl.ToString().Contains("imagenseleccion.png"))
+            {
+                await CoreMethods.DisplayAlert("", "Favor de seleccionar una foto de perfil", "Ok");
+                return;
+            }
+            var imageArray = FromFile.ToArray(file.GetStream());
+            var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray);
+            if (response)
+            {
+                await CoreMethods.DisplayAlert("", "Cuenta creada correctamente", "Ok");
+                await CoreMethods.PushPageModel<LoginPageModel>();
+            }
 
 
+        }
+        private bool RegisterIsValid()
+        {
+            if (!(string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword)))
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool PasswordsAreEqual()
+        {
+            if (Password == ConfirmPassword)
+            {
+                return true;
+            }
+            return false;
+        }
         private async Task SelectImage()
         {
             if (!CrossMedia.Current.IsPickPhotoSupported)
@@ -147,7 +144,7 @@ namespace InstagramClone.PageModels
         private void GoToInitialPage(object obj)
         {
 
-            CoreMethods.PushPageModel<InitialPageModel>();
+            CoreMethods.PopPageModel();
         }
     }
 }

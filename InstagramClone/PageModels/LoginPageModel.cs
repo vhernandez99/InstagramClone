@@ -13,8 +13,8 @@ namespace InstagramClone.PageModels
     public class LoginPageModel: FreshBasePageModel
     {
         public Command LoginCommand => new Command(Login);
-        public Command GoToInitialPageCommand => new Command(GoToInitialPage);
-        private string _UserName = "vhern99";
+        public Command GoToSignUpPageCommand => new Command(GoToSignUpPage);
+        private string _UserName = "victor99";
         public string UserName
         {
             set
@@ -41,9 +41,9 @@ namespace InstagramClone.PageModels
             }
         }
         public bool TaskInProcess { get; set; } = false;
-        private void GoToInitialPage(object obj)
+        private void GoToSignUpPage(object obj)
         {
-            CoreMethods.PushPageModel<InitialPageModel>();
+            CoreMethods.PushPageModel<SignUpPageModel>();
         }
 
         private async void Login(object obj)
@@ -54,18 +54,18 @@ namespace InstagramClone.PageModels
             var response = await ApiService.Login(UserName, Password);
             if (response)
             {
-                Preferences.Set("email", _UserName);
+                Preferences.Set("UserName", _UserName);
                 Preferences.Set("password", Password);
                 var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
                 tabbedPageContainer.SelectedTabColor = Color.Black;
                 tabbedPageContainer.BarBackgroundColor = Color.White;
                 tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+                tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
-                tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
+                //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
                 tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
-
                 App.Current.MainPage = tabbedPageContainer;
                 //CoreMethods.SwitchOutRootNavigation(NavigationContainerNames.MainContainer);
                 TaskInProcess = false;

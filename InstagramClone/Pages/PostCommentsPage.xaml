@@ -9,7 +9,7 @@
              >
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding PostCommentsCollection}">
+            <CollectionView ItemsSource="{Binding PostCommentsCollection}" ItemsUpdatingScrollMode="KeepLastItemInView">
                 <CollectionView.Header>
                     <StackLayout>
                         <StackLayout Orientation="Horizontal" Margin="15,20,10,0">

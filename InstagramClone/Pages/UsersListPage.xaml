@@ -2,14 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InstagramClone.Pages.UsersListPage"
-             NavigationPage.HasNavigationBar="False"
              BackgroundColor="White" 
              x:Name="userlist">
     <ContentPage.Content>
         <Grid>
-            <CollectionView ItemsSource="{Binding UsersList}" x:Name="UsersCv" SelectionMode="Single" 
+            <CollectionView ItemsSource="{Binding UsersList}" x:Name="UsersCv" SelectionMode="Single" >
                             
-                            >
+                            
 
                 <CollectionView.Header>
                     <StackLayout>

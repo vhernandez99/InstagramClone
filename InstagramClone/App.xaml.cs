@@ -14,7 +14,7 @@ namespace InstagramClone
     {
         public class NavigationContainerNames
         {
-            public static string AuthenticationContainer = "InitialPage";
+            public static string AuthenticationContainer = "LoginPage";
             public static string MainContainer = "MainPage";
         }
         public App()
@@ -31,8 +31,8 @@ namespace InstagramClone
             //tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
             //tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
             
-            var initialPage = FreshPageModelResolver.ResolvePageModel<InitialPageModel>();
-            var mainPageContainer = new FreshNavigationContainer(initialPage, NavigationContainerNames.AuthenticationContainer);
+            var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
+            var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
             
             //if(string.IsNullOrEmpty(accessToken))
             MainPage = mainPageContainer;
