@@ -7,6 +7,7 @@ using Plugin.Media.Abstractions;
 using Stormlion.ImageCropper;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -81,6 +82,7 @@ namespace InstagramClone.PageModels
                 return _ImageUrl;
             }
         }
+        public string ImageExtension { get; set; }
         public Command OpenGalleryCommand => new Command( async() => await OpenGallery());
         public Command OpenCameraCommand => new Command(async () => await OpenCamera());
         private async Task OpenCamera()
@@ -92,6 +94,7 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
+                PhotoSize = PhotoSize.Small,
                 CompressionQuality = 35,
                 AllowCropping = true
             }) ;
@@ -102,6 +105,7 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
+            ImageExtension = Path.GetExtension(file.Path);
         }
         public Command AddPostCommand => new Command(async () => await AddPost());
         private async Task OpenGallery()
@@ -114,6 +118,7 @@ namespace InstagramClone.PageModels
             file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
             {
                 //MaxWidthHeight=300,
+                PhotoSize=PhotoSize.Small,
                 CompressionQuality = 35
             });
             if (file == null)
@@ -123,19 +128,18 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
-
-
-
+            ImageExtension = Path.GetExtension(file.Path);
+            
         }
-        private async void GetUserLoggedInfo()
+        private async Task GetUserLoggedInfo()
         {
             UserLogged userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
         }
-        public  override void Init(object initData)
+        public  override async void Init(object initData)
         {
-            GetUserLoggedInfo();
+            await GetUserLoggedInfo();
         }
         private async Task AddPost()
         {
@@ -150,8 +154,7 @@ namespace InstagramClone.PageModels
                     return;
                 }
                 var imageArray = FromFile.ToArray(file.GetStream());
-
-                var response = await ApiService.AddPost(Description, file, imageArray);
+                var response = await ApiService.AddPost(Description, file, imageArray, ImageExtension);
                 if (response)
                 {
                     await CoreMethods.DisplayAlert("", "Publicacion creada con exito", "Ok");

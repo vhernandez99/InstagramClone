@@ -14,10 +14,9 @@ namespace InstagramClone.Services
 {
     public static class ApiService
     {
-        public static async Task<bool> RegisterUser(string name, string userName, string password, MediaFile file, byte[] userImageArray)
+        public static async Task<bool> RegisterUser(string name, string userName, string password, MediaFile file, byte[] userImageArray,string ImageExtension)
         {
             string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
-
             var httpClient = new HttpClient();
             var content = new MultipartFormDataContent
             {
@@ -25,6 +24,7 @@ namespace InstagramClone.Services
                 {new StringContent(userName),"UserName" },
                 {new StringContent(password),"Password" },
                 {new StringContent(tokenFirebase),"TokenFirebase" },
+                {new StringContent(ImageExtension),"ImageExtension" }
             };
             content.Add(new StreamContent(new MemoryStream(userImageArray)), "Image", file.Path);
             var ApiResponse = await httpClient.PostAsync(AppSettings.ApiUrl + "api/users/Register", content);
@@ -32,14 +32,15 @@ namespace InstagramClone.Services
             return true;
         }
 
-        public static async Task<bool> AddPost(string description, MediaFile file, byte[] postImageArray)
+        public static async Task<bool> AddPost(string description, MediaFile file, byte[] postImageArray,string ImageExtension)
         {
             await TokenValidator.CheckTokenValidity();
             var id = Preferences.Get("userId", 0);
             var httpClient = new HttpClient();
             var content = new MultipartFormDataContent
             {
-                { new StringContent(description), "Description" }
+                { new StringContent(description), "Description" },
+                { new StringContent(ImageExtension), "ImageExtension" }
             };
             content.Add(new StreamContent(new MemoryStream(postImageArray)), "Image", file.Path);
             var ApiResponse = await httpClient.PostAsync(AppSettings.ApiUrl + "api/posts/AddPost/" + id, content);

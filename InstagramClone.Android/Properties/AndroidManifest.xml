@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="3" android:versionName="0.2" package="mx.vhernandezapps.SLife" android:installLocation="internalOnly">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="0.4" package="mx.vhernandezapps.SLife" android:installLocation="internalOnly">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
 	<application android:label="SLife" android:theme="@style/MainTheme" android:icon="@mipmap/ic_launcher">
 		<provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
@@ -14,21 +14,11 @@
 			</intent-filter>
 		</receiver>
 		<meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/logoinvertido" />
-
-    
-    
-    <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-              android:theme="@style/Base.Theme.AppCompat"/>
-    <provider android:name="androidx.core.content.FileProvider"
-          android:authorities="${applicationId}.fileprovider"
-          android:exported="false"
-          android:grantUriPermissions="true">
-      <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                       android:resource="@xml/file_paths"></meta-data>
-    </provider>
-
-
-  </application>
+		<activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
+		<provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
+		</provider>
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>

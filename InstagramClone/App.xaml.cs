@@ -21,21 +21,22 @@ namespace InstagramClone
         {
             InitializeComponent();
             var accessToken = Preferences.Get("accessToken", string.Empty);
-            var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
-            tabbedPageContainer.SelectedTabColor = Color.Black;
-            tabbedPageContainer.BarBackgroundColor = Color.White;
-            tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
-            tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
-            tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
-            //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
-            tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
-            tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
-            tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
+            
             var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
             var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
             //if(string.IsNullOrEmpty(accessToken))
             if (!string.IsNullOrEmpty(accessToken))
             {
+                var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
+                tabbedPageContainer.SelectedTabColor = Color.Black;
+                tabbedPageContainer.BarBackgroundColor = Color.White;
+                tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+                tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
+                tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
+                //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
+                tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
+                tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+                tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
                 MainPage = tabbedPageContainer;
             }
             else

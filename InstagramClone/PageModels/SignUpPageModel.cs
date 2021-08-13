@@ -3,6 +3,7 @@ using ImageToArray;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -81,6 +82,7 @@ namespace InstagramClone.PageModels
                 return _ConfirmPassword;
             }
         }
+        public string ImageExtension { get; set; }
         private async Task Register()
         {
             if (!RegisterIsValid())
@@ -99,7 +101,7 @@ namespace InstagramClone.PageModels
                 return;
             }
             var imageArray = FromFile.ToArray(file.GetStream());
-            var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray);
+            var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray, ImageExtension);
             if (response)
             {
                 await CoreMethods.DisplayAlert("", "Cuenta creada correctamente", "Ok");
@@ -139,6 +141,7 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
+            ImageExtension = Path.GetExtension(file.Path);
         }
 
         private void GoToInitialPage(object obj)

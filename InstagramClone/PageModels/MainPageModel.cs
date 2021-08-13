@@ -104,7 +104,7 @@ namespace InstagramClone.PageModels
             IsRefreshing = true;
             PageNumber=1;
             PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
@@ -117,7 +117,7 @@ namespace InstagramClone.PageModels
             if (IsBusy) { return; }
             PageNumber++;
             IsBusy = true;
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
@@ -128,7 +128,7 @@ namespace InstagramClone.PageModels
         {
             PageNumber = 1;
             PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
@@ -138,17 +138,16 @@ namespace InstagramClone.PageModels
         {
             PostsCollection = new ObservableCollection<Post>();
         }
-        public async void GetUserLoggedInfo()
+        public async Task GetUserLoggedInfo()
         {
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
-            
         }
-       
+        
         public override async void Init(object initData)
         {
-            GetUserLoggedInfo();
+            await GetUserLoggedInfo();
             IsBusy = true;
             await GetAllPosts();
             IsBusy = false;
