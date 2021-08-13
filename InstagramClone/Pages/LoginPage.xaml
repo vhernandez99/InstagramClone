@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InstagramClone.Pages.LoginPage"
-             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             xmlns:entry="clr-namespace:InstagramClone.Renderers"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="White">
     <ContentPage.Content>

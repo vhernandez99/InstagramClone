@@ -3,6 +3,7 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -21,13 +22,12 @@ namespace InstagramClone.PageModels
             set
             {
                 _postCollection = value;
-                RaisePropertyChanged();
             }
         }
         public Command ViewPostCommentsCommand => new Command<Post>(ViewPostComments);
         public Command PostCommentCommand => new Command<int>(PostComment);
         public Command RefreshPostsCommand => new Command(RefreshPosts);
-        public Command RemainingItemsThresholdReachedCommand => new Command(RemainingItemsThresholdReached);
+        public Command RemainingItemsThresholdReachedCommand => new Command(async () => await RemainingItemsThresholdReached());
         public Command GoToUsersListPageCommand
         {
             get
@@ -76,8 +76,8 @@ namespace InstagramClone.PageModels
             }
             get => _isRefreshing;
         }
-
-        private int PageNumber = 0;
+        public bool IsBusy { get; set; }
+        public int PageNumber { get; set; } = 0;
         private async void PostComment(int postId)
         {
             if (TaskInProcess) { return; }
@@ -104,27 +104,31 @@ namespace InstagramClone.PageModels
             IsRefreshing = true;
             PageNumber=1;
             PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
             }
             IsRefreshing = false;
         }
-        private async void RemainingItemsThresholdReached()
+        private async Task RemainingItemsThresholdReached()
         {
+            
+            if (IsBusy) { return; }
             PageNumber++;
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            IsBusy = true;
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
             }
+            IsBusy = false;
         }
-        public async void GetAllPosts()
+        public async Task GetAllPosts()
         {
             PageNumber = 1;
             PostsCollection.Clear();
-            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 5);
+            List<Post> Posts = await ApiService.GetAllPosts(PageNumber, 10);
             foreach (Post post in Posts)
             {
                 PostsCollection.Add(post);
@@ -142,10 +146,12 @@ namespace InstagramClone.PageModels
             
         }
        
-        public override void Init(object initData)
+        public override async void Init(object initData)
         {
             GetUserLoggedInfo();
-            GetAllPosts();
+            IsBusy = true;
+            await GetAllPosts();
+            IsBusy = false;
             base.Init(initData);
         }
     }

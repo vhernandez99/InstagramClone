@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using static InstagramClone.App;
 
 namespace InstagramClone.PageModels
 {
@@ -29,7 +30,7 @@ namespace InstagramClone.PageModels
 
         private async void GoToMessage(UsersGetList obj)
         {
-            await CoreMethods.PushPageModel<MessagePageModel>(obj);
+           await CoreMethods.PushPageModel<MessagePageModel>(obj);
             SelectedUser = null;
         }
 

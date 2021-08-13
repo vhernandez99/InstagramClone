@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace InstagramClone.Renderers
 {
-    public class BorderlessEntry : Entry
+    public class BorderlessEditor:Editor
     {
 
     }

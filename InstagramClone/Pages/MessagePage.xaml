@@ -4,22 +4,23 @@
              x:Class="InstagramClone.Pages.MessagePage"
              xmlns:selectors="clr-namespace:InstagramClone.Helper"
              xmlns:pancakeview="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-             BackgroundColor="White"
              x:Name="messageP"
-             Title="{Binding ExternalName}">
+             BackgroundColor="White"
+             NavigationPage.HasBackButton="False"
+             Title="{Binding ExternalName}"
+             xmlns:editor="clr-namespace:InstagramClone.Renderers">
+             
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Regresar">
-                     
-            
+        <ToolbarItem Text="Regresar" Order="Primary" Command="{Binding GoBackToUsersListCommand}" >
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <selectors:ChatMessageSelector x:Key="SelectMessageTemplate"/>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid RowDefinitions="*,0.1*">
+        <Grid RowDefinitions="*,0.13*">
             <Grid Grid.Row="0" BackgroundColor="White">
-                <CollectionView ItemsSource="{Binding Messages}" Margin="10"
+                <CollectionView ItemsSource="{Binding Messages}" Margin="10" 
                                 ItemTemplate="{StaticResource SelectMessageTemplate}"
                                 ItemsUpdatingScrollMode="KeepLastItemInView">
                     <CollectionView.ItemsLayout>
@@ -29,20 +30,15 @@
                     <CollectionView.Resources>
                         <ResourceDictionary>
                             <DataTemplate x:Key="OwnText">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width=".2*"/>
-                                        <ColumnDefinition Width=".7*"/>
-                                        <ColumnDefinition Width=".1*"/>
-                                    </Grid.ColumnDefinitions>
+                                <Grid ColumnDefinitions=".25*,*">
                                     <pancakeview:PancakeView
                                 BackgroundColor="Navy"
                                 Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                CornerRadius="20,20,20,0"
+                                Grid.ColumnSpan="1"
+                                CornerRadius="20,20,20,20"
                                 IsClippedToBounds="True"
                                 HorizontalOptions="FillAndExpand"
-                                 Margin="0,10,15,0">
+                                 Margin="30,0,15,0">
                                         <Grid>
                                             <StackLayout Margin="15">
                                                 <Label Text="{Binding Messagee}"
@@ -54,34 +50,26 @@
                                 </Grid>
                             </DataTemplate>
                             <DataTemplate x:Key="ExternalText">
-                                <Grid Padding="10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width=".15*"/>
-                                        <ColumnDefinition Width=".7*"/>
-                                        <ColumnDefinition Width=".15*"/>
-                                    </Grid.ColumnDefinitions>
+                                <Grid Padding="10" ColumnDefinitions="Auto,.85*,.15*">
                                     <Frame Padding="0"
-                                   CornerRadius="30"
+                                   CornerRadius="25"
                                    HasShadow="False"
-                                   HeightRequest="60"
-                                   WidthRequest="60"
+                                   HeightRequest="50"
+                                   WidthRequest="50"
                                    HorizontalOptions="Center"
-                                   VerticalOptions="Center"
+                                   VerticalOptions="End"
                                    IsClippedToBounds="True"
                                    BackgroundColor="Gray">
                                         <Image Source="{Binding Path=BindingContext.ExternalUserFullImageUrl,Source={x:Reference messageP}}"  Aspect="AspectFill"/>
                                     </Frame>
-                                    <pancakeview:PancakeView
+                                    <pancakeview:PancakeView 
                                 BackgroundColor="#E6E9EF"
                                 Grid.Column="1"
-                                CornerRadius="20,20,0,20"
+                                CornerRadius="20,20,20,20"
                                 IsClippedToBounds="True"
-                                HorizontalOptions="FillAndExpand">
-                                        <StackLayout Margin="15">
-                                            <Label Text="{Binding Path=BindingContext.ExternalUserName,Source={x:Reference messageP}}"
-                                           TextColor="Gray"
-                                           FontSize="Micro"
-                                           FontAttributes="Bold"/>
+                                HorizontalOptions="FillAndExpand"
+                                        Margin="0,10,0,0">
+                                        <StackLayout Margin="15" VerticalOptions="CenterAndExpand">
                                             <Label Text="{Binding Messagee}"
                                            TextColor="DarkSlateGray"
                                            FontSize="Small"/>
@@ -91,15 +79,23 @@
                             </DataTemplate>
                         </ResourceDictionary>
                     </CollectionView.Resources>
+                    <CollectionView.Footer>
+                        <ActivityIndicator IsRunning="{Binding Path=BindingContext.IsBusy,Source={x:Reference messageP}}" HorizontalOptions="CenterAndExpand" Color="Red"
+                                           VerticalOptions="EndAndExpand" IsEnabled="{Binding Path=BindingContext.IsBusy,Source={x:Reference messageP}}"  
+                                           
+                                           HeightRequest="20" WidthRequest="10"/>
+                    </CollectionView.Footer>
                 </CollectionView>
             </Grid>
-            <Grid Grid.Row="1" BackgroundColor="White" VerticalOptions="EndAndExpand" ColumnDefinitions=".1*,.8*,.1*">
-                <ImageButton Source="gallery" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
-                <Editor Text="{Binding Message}" Grid.Column="1" AutoSize="TextChanges"/>
-                <ImageButton Source="sendmessage.png" BackgroundColor="Transparent" Grid.Column="2" 
+            <pancakeview:PancakeView BackgroundColor="#E6E9EF" Grid.Row="1" CornerRadius="15" Margin="15,0,25,15" >
+                <Grid ColumnDefinitions=".1*,.8*,.1*">
+                    <ImageButton Source="gallery" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
+                    <editor:BorderlessEditor Placeholder="Escribe un mensae" Text="{Binding Message}" Grid.Column="1" AutoSize="TextChanges"/>
+                    <ImageButton Source="sendmessage.png" BackgroundColor="Transparent" Grid.Column="2" 
                              VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
                              Command="{Binding SendMessageCommand}"/>
-            </Grid>
+                </Grid>
+            </pancakeview:PancakeView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

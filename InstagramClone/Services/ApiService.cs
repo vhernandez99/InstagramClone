@@ -202,7 +202,7 @@ namespace InstagramClone.Services
                     var email = Preferences.Get("UserName", string.Empty);
                     var password = Preferences.Get("password", string.Empty);
                     string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
-                    await ApiService.Login(email, password);
+                    await Login(email, password);
                 }
             }
         }

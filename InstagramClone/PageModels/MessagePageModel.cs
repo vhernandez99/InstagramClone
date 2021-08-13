@@ -1,5 +1,6 @@
 ﻿using FreshMvvm;
 using InstagramClone.Models;
+using InstagramClone.PageModels;
 using InstagramClone.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
@@ -119,11 +120,39 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
+        private bool _isBusy { get; set; }
+        public bool IsBusy
+        {
+            get
+            {
+                return _isBusy;
+            }
+            set
+            {
+                _isBusy = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private HubConnection hubConnection;
         public Command SendMessageCommand { get; }
         public Command ConnectCommand { get; }
         public Command DisconnectCommand { get; }
+        public Command GoBackToUsersListCommand
+        {
+            get
+            {
+                return new Command(async () => {
+                    //Push A Page Model
+                    if (IsBusy) { return; }
+                    IsBusy = true;
+                    await CoreMethods.PopPageModel();
+                    await Disconnect();
+                    IsBusy = false;
+                });
+            }
+        }
+
         public MessagePageModel()
         {
             Messages = new ObservableCollection<MessageModel>();
@@ -168,16 +197,19 @@ namespace InstagramClone.Pages
         }
         async Task Disconnect()
         {
+            
             await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), UserName);
             await hubConnection.StopAsync();
             IsConnected = false;
+
         }
         async Task SendMessage(string userName, string message)
         {
             await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), userName, message);
             await ApiService.CreateMessage(ConversationId, ExternalUserName, message);
+            Message = "";
         }
-        public async Task GetAllConversationMessages()
+        async Task GetAllConversationMessages()
         {
             List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId);
             foreach(MessageModel message in messages)
@@ -197,11 +229,6 @@ namespace InstagramClone.Pages
                 return;
             }
         }
-        public async void GetUserInfo(int id)
-        {
-            var userLoggedInfo = await ApiService.GetUserInfo(id);
-            UserName = userLoggedInfo.UserName;
-        }
         public async Task<int> VerifyIfConversationExists(int userid2)
         {
             try
@@ -214,18 +241,6 @@ namespace InstagramClone.Pages
                 await CoreMethods.DisplayAlert("VerifyIfConversationExists", r.Message, "Ok");
                 return 0;
             }
-            
-        }
-        //Obtener valor con Preferences llamado en MainPage
-        //public async void GetLoggedUserInfo()
-        //{
-        //    var userLoggedInfo = await ApiService.GetUserLoggedInfo();
-        //    UserName = userLoggedInfo.UserName;
-        //}
-        protected override async void ViewIsDisappearing(object sender, EventArgs e)
-        {
-            await Disconnect();
-            base.ViewIsDisappearing(sender, e);
         }
         public async override void Init(object initData)
         {
@@ -233,14 +248,19 @@ namespace InstagramClone.Pages
             ExternalUserFullImageUrl = user.FullImageUrl;
             ExternalUserName = user.UserName;
             ExternalName = user.Name;
+            //verify if this conversation exists
+            if (IsBusy) { return; }
+            IsBusy = true;
             await VerifyIfConversationExists(user.Id);
+            //if not create a new one and again use VerifyIfConversationExists method to save ConversationId property
             if (ConversationId == 0)
             {
                 await CreateConversation(user.Id);
+                await VerifyIfConversationExists(user.Id);
             }
             await GetAllConversationMessages();
             await Connect();
-            
+            IsBusy = false;
             //GetLoggedUserInfo();
             base.Init(initData);
         }

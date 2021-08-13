@@ -5,7 +5,7 @@
              Title="Comentarios"
              x:Name="Comentariospage"
              BackgroundColor="White"
-             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             xmlns:entry="clr-namespace:InstagramClone.Renderers"
              >
     <ContentPage.Content>
         <StackLayout>
@@ -33,8 +33,7 @@
                         <Grid RowDefinitions="Auto" ColumnDefinitions="Auto" >
                             <StackLayout Margin="15,0,0,0">
                                 <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25" >
-                                    <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" 
-                                            />
+                                    <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill"/>
                                 </Frame>
                             </StackLayout>
                             <Label VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand" Grid.Row="0" Grid.Column="1" Margin="0,0,15,0">

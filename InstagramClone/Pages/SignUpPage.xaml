@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             xmlns:entry="clr-namespace:InstagramClone.Renderers"
              x:Class="InstagramClone.Pages.SignUpPage"
              BackgroundColor="#33CC33"
              NavigationPage.HasNavigationBar="False">

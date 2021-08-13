@@ -11,7 +11,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using InstagramClone.Droid;
-using InstagramClone.Helper;
+using InstagramClone.Renderers;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(BorderlessEntry), typeof(BorderlessEntryRenderer))]

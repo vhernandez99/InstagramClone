@@ -4,6 +4,7 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Stormlion.ImageCropper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -80,7 +81,7 @@ namespace InstagramClone.PageModels
                 return _ImageUrl;
             }
         }
-        public Command OpenGalleryCommand => new Command(async () => await OpenGallery());
+        public Command OpenGalleryCommand => new Command( async() => await OpenGallery());
         public Command OpenCameraCommand => new Command(async () => await OpenCamera());
         private async Task OpenCamera()
         {
@@ -91,8 +92,9 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
-                CompressionQuality = 35
-            });
+                CompressionQuality = 35,
+                AllowCropping = true
+            }) ;
             if (file == null)
                 return;
             ImageUrl = ImageSource.FromStream(() =>
@@ -111,6 +113,7 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
             {
+                //MaxWidthHeight=300,
                 CompressionQuality = 35
             });
             if (file == null)
@@ -120,6 +123,9 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
+
+
+
         }
         private async void GetUserLoggedInfo()
         {

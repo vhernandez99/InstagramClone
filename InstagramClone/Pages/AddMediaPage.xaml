@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InstagramClone.Pages.AddMediaPage"
              BackgroundColor="White"
-             xmlns:entry="clr-namespace:InstagramClone.Helper"
+             xmlns:entry="clr-namespace:InstagramClone.Renderers"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowDefinitions="100,*,100" ColumnDefinitions="100,*,100">

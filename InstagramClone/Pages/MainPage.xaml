@@ -4,128 +4,147 @@
 			 x:Class="InstagramClone.Pages.MainPage"
 			 NavigationPage.HasNavigationBar="False"
 			 BackgroundColor="White"
-             xmlns:entry="clr-namespace:InstagramClone.Helper"
-             x:Name="MainPage2"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton">
+			 xmlns:editor="clr-namespace:InstagramClone.Renderers"
+			 x:Name="MainPage2"
+			 xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,Auto,Auto">
-            <StackLayout Orientation="Horizontal" Margin="15,0,15,0" BackgroundColor="Transparent">
-                <Frame WidthRequest="100"  Padding="0" BackgroundColor="Transparent" HorizontalOptions="StartAndExpand" 
-                       VerticalOptions="StartAndExpand">
+        <Grid RowDefinitions="15,Auto,*">
+            <StackLayout Grid.Row="1" Orientation="Horizontal" 
+                         Margin="0,0,15,0" 
+                         BackgroundColor="Transparent">
+                <Frame WidthRequest="85" HeightRequest="25"  Padding="0" 
+                       BackgroundColor="Transparent" 
+                       HorizontalOptions="StartAndExpand" 
+					   VerticalOptions="StartAndExpand">
                     <Image Source="slife.png"/>
                 </Frame>
                 <StackLayout Orientation="Horizontal" Spacing="30">
-                    <Image  Source="heart" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand"/>
-                    <ImageButton Source="messenger" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"
-                                 Command="{Binding GoToUsersListPageCommand}"/>
+                    <ImageButton  Source="heart" WidthRequest="25" 
+                                  HeightRequest="25" 
+                                  HorizontalOptions="EndAndExpand" 
+                                  BackgroundColor="Transparent"/>
+                    <ImageButton Source="messenger" WidthRequest="25" 
+                                 HeightRequest="25" 
+                                 HorizontalOptions="EndAndExpand" 
+                                 BackgroundColor="Transparent"
+								 Command="{Binding GoToUsersListPageCommand}"/>
                 </StackLayout>
             </StackLayout>
-            <StackLayout Grid.Row="1">
-                <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshPostsCommand}">
-                    <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" x:Name="PostsCV" Margin="0" RemainingItemsThreshold="1" 
-                                    RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
-                                    >
-                        <CollectionView.Header>
-                            <CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
+            <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}"
+							 Command="{Binding RefreshPostsCommand}">
+                <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}"  
+									x:Name="PostsCV" Margin="0,0,0,0" 
+									RemainingItemsThreshold="0" 
+									RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}">
+                    <!--<CollectionView.Header>
+							<CollectionView ItemsSource="{Binding Stories}" HeightRequest="110" x:Name="storiesCv"
 							Margin="0,0,0,0">
-                                <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Horizontal" >
-                                    </LinearItemsLayout>
-                                </CollectionView.ItemsLayout>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackLayout>
-                                            <Frame Padding="5" WidthRequest="65" HeightRequest="65"
+								<CollectionView.ItemsLayout>
+									<LinearItemsLayout Orientation="Horizontal" >
+									</LinearItemsLayout>
+								</CollectionView.ItemsLayout>
+								<CollectionView.ItemTemplate>
+									<DataTemplate>
+										<StackLayout>
+											<Frame Padding="5" WidthRequest="65" HeightRequest="65"
 								   Margin="8,0,8,0" BorderColor="Red" 
-							       CornerRadius="50"
+								   CornerRadius="50"
 								   IsClippedToBounds="True">
-                                                <Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
-							           CornerRadius="50"
-								       IsClippedToBounds="True">
-                                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
-                                                </Frame>
-                                            </Frame>
-                                            <Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
-                                            <BoxView HeightRequest="1" Color="#f7f7f7"></BoxView>
-                                        </StackLayout>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </CollectionView.Header>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout Margin="0,0,0,0">
-                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                        <Frame Padding="0" WidthRequest="30" HeightRequest="30" 
-                                       CornerRadius="15">
-                                            <Image Source="{Binding FullUserImageUrl}" Aspect="AspectFill" />
-                                        </Frame>
-                                        <Label Text="{Binding UserName}" TextColor="Black" VerticalTextAlignment="Center" 
-                                               FontAttributes="Bold"/>
-                                        <Image Source="menu" HorizontalOptions="EndAndExpand" WidthRequest="18" Margin="0,0,10,0"/>
-                                    </StackLayout>
-                                    <Frame Padding="0" WidthRequest="300" HeightRequest="300">
-                                        <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"  sk:Skeleton.Hide="True"/>
+												<Frame Padding="0" WidthRequest="65" HeightRequest="65" BorderColor="Gray"
+									   CornerRadius="50"
+									   IsClippedToBounds="True">
+													<Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+												</Frame>
+											</Frame>
+											<Label Text="{Binding UserName}" HorizontalTextAlignment="Center" TextColor="Black"/>
+											<BoxView HeightRequest="1" Color="#f7f7f7"></BoxView>
+										</StackLayout>
+									</DataTemplate>
+								</CollectionView.ItemTemplate>
+							</CollectionView>
+						</CollectionView.Header>-->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid RowDefinitions="Auto,*,Auto,Auto">
+                                <Grid ColumnDefinitions="Auto,*,.1*" 
+									  Margin="10,0,0,0" 
+									  RowDefinitions="Auto">
+                                    <Frame Padding="0" WidthRequest="30" 
+										   HeightRequest="30" 
+									   CornerRadius="15">
+                                        <Image Source="{Binding FullUserImageUrl,Mode=OneTime}" 
+											   Aspect="AspectFill" />
                                     </Frame>
-                                    <StackLayout Orientation="Horizontal" Margin="7,0,0,0">
-                                        <Image Source="heart" WidthRequest="25"/>
-                                        <Image Source="comment" WidthRequest="55"/>
-                                        <Image Source="message" WidthRequest="35"/>
-                                        <Image Source="savepost" WidthRequest="35" HorizontalOptions="EndAndExpand"/>
+                                    <Label Grid.Column="1" Text="{Binding UserName,Mode=OneTime}" 
+										   TextColor="Black" VerticalTextAlignment="Center" FontSize="15"
+											   FontAttributes="Bold"/>
+                                    <ImageButton Grid.Column="2" Source="menu" 
+												 HorizontalOptions="EndAndExpand" 
+												 BackgroundColor="Transparent"
+												 WidthRequest="18" Margin="0,0,10,0"/>
+                                </Grid>
+                                <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="0">
+                                    <Frame Padding="0" HeightRequest="400">
+                                        <Image Source="{Binding FullPostImageUrl,Mode=OneTime}" Aspect="AspectFill"/>
+                                    </Frame>
+                                    <StackLayout Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,0" 
+												 VerticalOptions="Start" 
+												 HorizontalOptions="Fill">
+                                        <Image Source="heart" 
+											   WidthRequest="25" 
+											   HeightRequest="25" 
+											   VerticalOptions="CenterAndExpand"/>
+                                        <Image Source="comment" 
+											   WidthRequest="55" 
+											   VerticalOptions="CenterAndExpand"/>
+                                        <Image Source="message" 
+											   WidthRequest="35" 
+											   HeightRequest="25" />
+                                        <Image Source="savepost" 
+											   WidthRequest="35" 
+											   HorizontalOptions="EndAndExpand" />
                                         <Image/>
                                     </StackLayout>
-                                    <StackLayout Margin="7,-15,0,0">
-                                        <!--<Label Text="70 views" TextColor="Black" FontAttributes="Bold"/>-->
-                                        <Label Grid.Row="1" Text="Ver todos los comentarios" TextColor="Gray">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Path=BindingContext.ViewPostCommentsCommand,Source={x:Reference MainPage2}}" 
-                                                                      CommandParameter="{Binding .}"/>
-                                            </Label.GestureRecognizers>
-                                        </Label>
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label TextColor="Black">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding UserName}" TextColor="Black" FontAttributes="Bold"/>
-                                                        <Span Text=" "/>
-                                                        <Span  Text="{Binding Description}"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </StackLayout>
-                                        <StackLayout Orientation="Horizontal" Margin="0,-10,0,0">
-                                            <!--<Label TextColor="Black" FontAttributes="Bold" VerticalTextAlignment="Center">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding Path=BindingContext.UserLoggedUserName,Source={x:Reference MainPage2}}" />
-                                                        <Span/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>-->
-                                            <Frame Padding="0" WidthRequest="30" HeightRequest="30" CornerRadius="15"  HorizontalOptions="Start" 
+                                    <Label Grid.Row="2" Text="Ver todos los comentarios" 
+                                           Margin="10,0,0,0" TextColor="Gray">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.ViewPostCommentsCommand,Source={x:Reference MainPage2}}" 
+																	  CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Grid.Row="3" Margin="10,0,0,0" TextColor="Black">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding UserName}" TextColor="Black" 
+													  FontAttributes="Bold" FontSize="15"/>
+                                                <Span Text=" "/>
+                                                <Span  Text="{Binding Description}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                                <StackLayout Grid.Row="2" Orientation="Horizontal" Margin="10,-10,0,0">
+                                    <Frame Padding="0" WidthRequest="30" HeightRequest="30" CornerRadius="15"  HorizontalOptions="Start" 
                                                    VerticalOptions="CenterAndExpand">
                                                 <Image Source="{Binding Path=BindingContext.UserLoggedImageUrl,Source={x:Reference MainPage2}}" Aspect="AspectFill"/>
                                             </Frame>
-                                            <entry:BorderlessEntry Placeholder="Agregar un comentario" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
-                                                                   Text="{Binding Path=BindingContext.CommentText,Source={x:Reference MainPage2}}" 
-                                                                   VerticalTextAlignment="Center"/>
-                                            <Label Text="Comentar" VerticalTextAlignment="Center" TextColor="#427da4" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" 
+                                            <editor:BorderlessEditor Placeholder="Agregar un comentario" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
+                                                                   Text="{Binding Path=BindingContext.CommentText,Source={x:Reference MainPage2}}" AutoSize="TextChanges"
+                                                                     FontSize="Small"/>
+
+                                    <Label Text="Comentar" VerticalTextAlignment="Center" TextColor="#427da4" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" FontSize="Small"
                                                    >
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Path=BindingContext.PostCommentCommand,Source={x:Reference MainPage2}}" CommandParameter="{Binding Id}"  />
                                                 </Label.GestureRecognizers>
                                             </Label>
                                         </StackLayout>
-                                        <BoxView HeightRequest="1" Color="LightGray"></BoxView>
-                                        <!--<Label Text="57 seconds ago" TextColor="Gray" FontSize="Caption"/>-->
-                                    </StackLayout>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </RefreshView>
-            </StackLayout>
+                                <BoxView Grid.Row="3" HeightRequest="1" Color="LightGray"></BoxView>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
