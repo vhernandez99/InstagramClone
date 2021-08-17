@@ -166,9 +166,6 @@
     <AndroidResource Include="Resources\drawable\home.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\search.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\shop.png" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +208,8 @@
     <AndroidResource Include="Resources\xml\file_paths.xml" />
     <AndroidResource Include="Resources\drawable\grupo.png" />
     <AndroidResource Include="Resources\drawable\sendmessage.png" />
+    <AndroidResource Include="Resources\drawable\notificacion.png" />
+    <AndroidResource Include="Resources\drawable\search.png" />
     <Content Include="values\ic_launcher_background.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

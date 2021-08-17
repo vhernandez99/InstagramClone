@@ -7,6 +7,7 @@ using InstagramClone.PageModels;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Essentials;
 using InstagramClone.Services;
+using InstagramClone.Pages;
 
 namespace InstagramClone
 {
@@ -16,12 +17,13 @@ namespace InstagramClone
         {
             public static string AuthenticationContainer = "LoginPage";
             public static string MainContainer = "MainPage";
+            public static string UsersListPage = "UsersListPage";
+
         }
-        public App()
+        public App(bool shallNavigate)
         {
             InitializeComponent();
-            var accessToken = Preferences.Get("accessToken", string.Empty);
-            
+            var accessToken = Preferences.Get("accessToken", string.Empty); 
             var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
             var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
             //if(string.IsNullOrEmpty(accessToken))
@@ -37,6 +39,33 @@ namespace InstagramClone
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
                 tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
+
+                //var messagePage = FreshPageModelResolver.ResolvePageModel<MessagePageModel>();
+
+                //MessagePageModel messagePageModel = new MessagePageModel();
+                //tabbedPageContainer.PushPage(messagePage, messagePageModel);
+                MainPage = tabbedPageContainer;
+            }
+            if (shallNavigate && !string.IsNullOrEmpty(accessToken))
+            {
+                var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.UsersListPage);
+                tabbedPageContainer.SelectedTabColor = Color.Black;
+                tabbedPageContainer.BarBackgroundColor = Color.White;
+                tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+                tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
+                tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
+                //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
+                tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
+                tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+                tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
+                
+                var usersListPage = FreshPageModelResolver.ResolvePageModel<UsersListPageModel>();
+                UsersListPageModel usersListPageModel = new UsersListPageModel();
+                tabbedPageContainer.PushPage(usersListPage, usersListPageModel);
+
+                //var messagePage = FreshPageModelResolver.ResolvePageModel<MessagePageModel>();
+                //MessagePageMode.l messagePageModel = new MessagePageModel();
+                //tabbedPageContainer.PushPage(messagePage, messagePageModel);
                 MainPage = tabbedPageContainer;
             }
             else

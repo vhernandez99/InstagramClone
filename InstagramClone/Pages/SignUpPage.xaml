@@ -56,6 +56,7 @@
                             <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Red"/>
                 </StackLayout>
             </Frame>
 

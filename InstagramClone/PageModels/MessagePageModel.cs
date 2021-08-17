@@ -15,6 +15,22 @@ namespace InstagramClone.Pages
 {
     public class MessagePageModel: FreshBasePageModel
     {
+        
+        private string _loggedUserFullImageUrl;
+        public string LoggedUserFullImageUrl
+        {
+            set
+            {
+                _loggedUserFullImageUrl = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _loggedUserFullImageUrl;
+            }
+        }
+        public string LoggedName { get; set; }
+
         private string _externalUserFullImageUrl;
         public string ExternalUserFullImageUrl
         {
@@ -27,7 +43,7 @@ namespace InstagramClone.Pages
             {
                 return _externalUserFullImageUrl;
             }
-        }
+        }        
         private string _externalUserName;
         public string ExternalUserName
         {
@@ -42,6 +58,7 @@ namespace InstagramClone.Pages
             }
         }
         private string _externalName;
+        public List<string> ExternalUserTokenFirebase = new List<string>();
         public string ExternalName
         {
             set
@@ -54,21 +71,22 @@ namespace InstagramClone.Pages
                 return _externalName;
             }
         }
-        private string _userName=Preferences.Get("UserName", string.Empty);
+        
         private int _conversationId;
         private string _message;
         private ObservableCollection<MessageModel> _messages;
         private bool _isConnected;
         //Actually unique UserName
-        public string UserName
+        private string _loggedUserName = Preferences.Get("UserName", string.Empty);
+        public string LoggedUserName
         {
             get
             {
-                return _userName;
+                return _loggedUserName;
             }
             set
             {
-                _userName = value;
+                _loggedUserName = value;
                 RaisePropertyChanged();
             }
         }
@@ -96,18 +114,7 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
-        public ObservableCollection<MessageModel> Messages
-        {
-            get
-            {
-                return _messages;
-            }
-            set
-            {
-                _messages = value;
-                RaisePropertyChanged();
-            }
-        }
+        
         public bool IsConnected
         {
             get
@@ -133,7 +140,18 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
-
+        public ObservableCollection<MessageModel> Messages
+        {
+            get
+            {
+                return _messages;
+            }
+            set
+            {
+                _messages = value;
+                RaisePropertyChanged();
+            }
+        }
         private HubConnection hubConnection;
         public Command SendMessageCommand { get; }
         public Command ConnectCommand { get; }
@@ -156,7 +174,7 @@ namespace InstagramClone.Pages
         public MessagePageModel()
         {
             Messages = new ObservableCollection<MessageModel>();
-            SendMessageCommand = new Command(async () => { await SendMessage(UserName, Message); });
+            SendMessageCommand = new Command(async () => { await SendMessage(LoggedUserName, Message); });
             ConnectCommand = new Command(async () => await Connect());
             DisconnectCommand = new Command(async () => await Disconnect());
             IsConnected = false;
@@ -178,11 +196,11 @@ namespace InstagramClone.Pages
                 //    Messages.Add(new MessageModel() { UserName = UserName, Message = $"{user} has left the chat group", IsSystemMessage = true });
                 //});
                 await hubConnection.StartAsync();
-                await hubConnection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), UserName);
+                await hubConnection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
                 IsConnected = true;
                 hubConnection.On<string, string>("ReceiveGroupMessage", (user, message) =>
                 {
-                    Messages.Add(new MessageModel() { UserName = user, Messagee = message, IsSystemMessage = false, IsOwnMessage = UserName == user });
+                    Messages.Add(new MessageModel() { UserName = user, Messagee = message, IsSystemMessage = false, IsOwnMessage = LoggedUserName == user });
                 });
                 if (IsConnected)
                 {
@@ -198,16 +216,30 @@ namespace InstagramClone.Pages
         async Task Disconnect()
         {
             
-            await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), UserName);
+            await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
             await hubConnection.StopAsync();
             IsConnected = false;
 
+        }
+        async Task SendMessageNotification()
+        {
+            var data = new { action = "Play", userId = 5 };
+            await GetUserLoggedInfo();
+            await ApiService.SendPushNotification(LoggedName, Message,data,ExternalUserTokenFirebase, LoggedUserFullImageUrl);
         }
         async Task SendMessage(string userName, string message)
         {
             await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), userName, message);
             await ApiService.CreateMessage(ConversationId, ExternalUserName, message);
+            await SendMessageNotification();
             Message = "";
+        }
+        async Task GetUserLoggedInfo()
+        {
+            var userLogged = await ApiService.GetUserLoggedInfo();
+
+            LoggedUserFullImageUrl = userLogged.FullImageUrl;
+            LoggedName = userLogged.Name;
         }
         async Task GetAllConversationMessages()
         {
@@ -248,6 +280,7 @@ namespace InstagramClone.Pages
             ExternalUserFullImageUrl = user.FullImageUrl;
             ExternalUserName = user.UserName;
             ExternalName = user.Name;
+            ExternalUserTokenFirebase.Add(user.TokenFirebase);
             //verify if this conversation exists
             if (IsBusy) { return; }
             IsBusy = true;

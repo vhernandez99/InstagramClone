@@ -25,7 +25,7 @@ namespace InstagramClone.Droid
             {
                 flag = true;
             }
-            LoadApplication(new App());
+            LoadApplication(new App(flag));
             Window.SetStatusBarColor(Android.Graphics.Color.Argb(255, 255, 255, 255));
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

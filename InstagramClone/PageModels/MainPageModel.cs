@@ -76,7 +76,30 @@ namespace InstagramClone.PageModels
             }
             get => _isRefreshing;
         }
-        public bool IsBusy { get; set; }
+        public bool _isBusy;
+        public bool IsBusy
+        {
+            set
+            {
+                _isBusy = value;
+                IsVisible = !value;
+                RaisePropertyChanged();
+            }
+            get => _isBusy;
+
+
+        }
+        public bool _isVisible;
+        public bool IsVisible
+        {
+            set
+            {
+                _isVisible = value;
+                RaisePropertyChanged();
+            }
+            get => _isVisible;
+            
+        }
         public int PageNumber { get; set; } = 0;
         private async void PostComment(int postId)
         {

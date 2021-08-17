@@ -19,10 +19,15 @@
                     <Image Source="slife.png"/>
                 </Frame>
                 <StackLayout Orientation="Horizontal" Spacing="30">
-                    <ImageButton  Source="heart" WidthRequest="25" 
+                    <ImageButton Source="search.png" WidthRequest="25" 
+                                 HeightRequest="25" 
+                                 HorizontalOptions="EndAndExpand" 
+                                 BackgroundColor="Transparent"
+								 Command="{Binding GoToUsersListPageCommand}"/>
+                    <!--<ImageButton  Source="heart" WidthRequest="25" 
                                   HeightRequest="25" 
                                   HorizontalOptions="EndAndExpand" 
-                                  BackgroundColor="Transparent"/>
+                                  BackgroundColor="Transparent"/>-->
                     <ImageButton Source="messenger" WidthRequest="25" 
                                  HeightRequest="25" 
                                  HorizontalOptions="EndAndExpand" 
@@ -30,10 +35,10 @@
 								 Command="{Binding GoToUsersListPageCommand}"/>
                 </StackLayout>
             </StackLayout>
-            <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}"
+            <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" 
 							 Command="{Binding RefreshPostsCommand}">
-                <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}"  
-									x:Name="PostsCV" Margin="0,0,0,0" 
+                <CollectionView Grid.Row="2" ItemsSource="{Binding PostsCollection}" 
+									x:Name="PostsCV" Margin="0" 
 									RemainingItemsThreshold="0" 
 									RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}">
                     <!--<CollectionView.Header>

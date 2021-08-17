@@ -6,6 +6,7 @@ namespace InstagramClone.Models
 {
     public class MessageModel
     {
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string Messagee { get; set; }
         public bool IsOwnMessage { get; set; }

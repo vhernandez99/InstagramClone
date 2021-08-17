@@ -53,23 +53,22 @@ namespace InstagramClone.Droid.PushNotifications
             }
 
             messageId++;
-
             Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
             intent.PutExtra(TitleKey, pTitle);
             intent.PutExtra(MessageKey, pBody);
             intent.AddFlags(ActivityFlags.ClearTop);
+            var pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, 0, intent, PendingIntentFlags.OneShot);
 
-            PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.UpdateCurrent);
+            //PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.UpdateCurrent);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(pTitle)
                 .SetContentText(pBody)
                 .SetAutoCancel(true)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.message))
-                .SetSmallIcon(Resource.Drawable.message)
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.Logoinvertido))
+                .SetSmallIcon(Resource.Drawable.Logoinvertido)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
-
             var notification = builder.Build();
             manager.Notify(messageId, notification);
 

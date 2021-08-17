@@ -1,6 +1,7 @@
 ﻿using InstagramClone.Models;
 using Newtonsoft.Json;
 using Plugin.Media.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -14,6 +15,8 @@ namespace InstagramClone.Services
 {
     public static class ApiService
     {
+        private static Uri FireBasePushNotificationsURL = new Uri("https://fcm.googleapis.com/fcm/send");
+        private static string serverKey = "AAAAAeCVnIE:APA91bFF16hFsN2aTifwY1axfxyyWjDMw6B0DLxpt78nOB_arz2nTkzhPJVhl4uUbfpBYikcvCEOzbFQ6v1n4lCoUAvSGTOsuvymmZOne5FXqave1eOD8pmEjhB8OJ2524WU7J-rv97r";
         public static async Task<bool> RegisterUser(string name, string userName, string password, MediaFile file, byte[] userImageArray,string ImageExtension)
         {
             string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
@@ -77,6 +80,23 @@ namespace InstagramClone.Services
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetAllPosts?sort=desc&pageNumber={0}&pageSize={1}", pageNumber, pageSize));
             return JsonConvert.DeserializeObject<List<Post>>(response);
+        }
+        public static async Task<MessageModel> GetLastConversationMessage(int id)
+        {
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetUserConversations/" + id));
+            return JsonConvert.DeserializeObject<MessageModel>(response);
+        }
+        public static async Task<List<ConversationAdd>> GetUserConversations()
+        {
+            var id = Preferences.Get("userId", 0);
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetUserConversations/"+id));
+            return JsonConvert.DeserializeObject<List<ConversationAdd>>(response);
         }
 
         public static async Task<List<UsersGetList>> GetAllUsers()
@@ -191,6 +211,37 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetLoggedUserInfo/" + id));
             return JsonConvert.DeserializeObject<UserLogged>(response);
         }
+        public static async Task<bool> SendPushNotification(string title, string body, object data,List<string> firebaseToken,string externalUserImageUrl)
+        {
+            await TokenValidator.CheckTokenValidity();
+            //var usersTokens = await ApiService.GetAllTokens();
+            //var deviceTokens = usersTokens.Select(x => x.Token).ToArray();
+            bool sent = false;
+            var messageInformation = new MessageFireBaseNotification()
+            {
+                notification = new NotificationFireBaseNotification()
+                {
+                    title = title,
+                    body = body,
+                    image = externalUserImageUrl
+
+                },
+                data = data,
+                registration_ids = firebaseToken.ToArray()
+            };
+            string jsonMessage = JsonConvert.SerializeObject(messageInformation);
+            var request = new HttpRequestMessage(HttpMethod.Post, FireBasePushNotificationsURL);
+            request.Headers.TryAddWithoutValidation("Authorization", "key=" + serverKey);
+            request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+            HttpResponseMessage result;
+            using (var client = new HttpClient())
+            {
+                result = await client.SendAsync(request);
+                sent = sent && result.IsSuccessStatusCode;
+            }
+            return sent;
+        }
+
         public static class TokenValidator
         {
             public static async Task CheckTokenValidity()

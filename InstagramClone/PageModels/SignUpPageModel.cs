@@ -82,29 +82,52 @@ namespace InstagramClone.PageModels
                 return _ConfirmPassword;
             }
         }
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            set
+            {
+                _isBusy = value;
+            }
+            get
+            {
+                return _isBusy;
+            }
+        }
         public string ImageExtension { get; set; }
         private async Task Register()
         {
+            if (IsBusy) { return; }
+            IsBusy = true;
+
             if (!RegisterIsValid())
             {
+                IsBusy = false;
                 await CoreMethods.DisplayAlert("", "Favor de llenar todos los campos", "Ok");
+                
                 return;
             }
             if (!PasswordsAreEqual())
             {
+                IsBusy = false;
                 await CoreMethods.DisplayAlert("", "Las contraseñas no coinciden", "Ok");
+               
                 return;
             }
             if (ImageUrl.ToString().Contains("imagenseleccion.png"))
             {
+                IsBusy = false;
                 await CoreMethods.DisplayAlert("", "Favor de seleccionar una foto de perfil", "Ok");
+                
                 return;
             }
             var imageArray = FromFile.ToArray(file.GetStream());
             var response = await ApiService.RegisterUser(Name, User, Password, file, imageArray, ImageExtension);
             if (response)
             {
+                IsBusy = false;
                 await CoreMethods.DisplayAlert("", "Cuenta creada correctamente", "Ok");
+                
                 await CoreMethods.PushPageModel<LoginPageModel>();
             }
 

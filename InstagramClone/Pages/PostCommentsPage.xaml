@@ -9,21 +9,31 @@
              >
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding PostCommentsCollection}" ItemsUpdatingScrollMode="KeepLastItemInView">
+            <CollectionView ItemsSource="{Binding PostCommentsCollection}" 
+                            ItemsUpdatingScrollMode="KeepLastItemInView">
                 <CollectionView.Header>
-                    <StackLayout>
-                        <StackLayout Orientation="Horizontal" Margin="15,20,10,0">
+                    <Grid RowDefinitions="Auto" ColumnDefinitions="15,Auto,*,15">
+                        <StackLayout Grid.Column="1">
                             <Frame Padding="0" WidthRequest="50" HeightRequest="50" 
                                        CornerRadius="25">
-                                <Image Source="{Binding Path=BindingContext.UserImageUrl, Source={x:Reference Comentariospage }}" Aspect="AspectFill"/>
+                                <Image Source="{Binding Path=BindingContext.UserImageUrl, Source={x:Reference Comentariospage }}" 
+                                       Aspect="AspectFill"/>
                             </Frame>
-                            <Label Text="{Binding Path=BindingContext.PostUserName,Source={Reference Comentariospage}}" VerticalOptions="CenterAndExpand" FontAttributes="Bold"
-                               TextColor="Black"/>
-                        <Label Text="{Binding Path=BindingContext.PostDescription,Source={Reference Comentariospage}}"  
-                               VerticalOptions="CenterAndExpand" TextColor="Black"/>
-                    </StackLayout>
-                        <BoxView Color="LightGray" HeightRequest="1"/>
-                    </StackLayout>
+                        </StackLayout>
+                        <Grid Grid.Column="2" RowDefinitions="Auto" ColumnDefinitions="Auto">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Path=BindingContext.PostUserName,Source={Reference Comentariospage}}" 
+                                              FontAttributes="Bold" TextColor="Black"/>
+                                        <Span Text=" "/>
+                                        <Span Text="{Binding Path=BindingContext.PostDescription,Source={Reference Comentariospage}}" 
+                                              TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>

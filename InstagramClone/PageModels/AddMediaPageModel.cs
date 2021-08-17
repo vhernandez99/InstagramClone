@@ -4,7 +4,6 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Stormlion.ImageCropper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -94,8 +93,9 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
-                PhotoSize = PhotoSize.Small,
-                CompressionQuality = 35,
+                PhotoSize = PhotoSize.Custom,
+                CustomPhotoSize=50,
+                CompressionQuality = 45,
                 AllowCropping = true
             }) ;
             if (file == null)
