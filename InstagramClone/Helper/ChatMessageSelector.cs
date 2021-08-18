@@ -11,18 +11,18 @@ namespace InstagramClone.Helper
     {
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            var loggerUserId = Preferences.Get("userId", 0);
+            var loggedUserId = Preferences.Get("userId", 0);
             var list = (CollectionView)container;
             MessageModel message = (MessageModel)item;
-            if (message.IsOwnMessage||message.SenderId== loggerUserId)
+            if (message.LoggedUserId==loggedUserId)
             {
-                return (DataTemplate)list.Resources["OwnText"];
+                return (DataTemplate)list.Resources["Case1View"];
             }
-            else if (message.IsOwnMessage == false)
+            else
             {
-                return (DataTemplate)list.Resources["ExternalText"];
+                return (DataTemplate)list.Resources["Case2View"];
             }
-            return null;
+            
         }
     }
 }

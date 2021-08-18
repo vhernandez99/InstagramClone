@@ -89,14 +89,14 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetUserConversations/" + id));
             return JsonConvert.DeserializeObject<MessageModel>(response);
         }
-        public static async Task<List<ConversationAdd>> GetUserConversations()
+        public static async Task<List<ConversationsUserGet>> GetUserConversations()
         {
             var id = Preferences.Get("userId", 0);
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetUserConversations/"+id));
-            return JsonConvert.DeserializeObject<List<ConversationAdd>>(response);
+            return JsonConvert.DeserializeObject<List<ConversationsUserGet>>(response);
         }
 
         public static async Task<List<UsersGetList>> GetAllUsers()
@@ -175,7 +175,8 @@ namespace InstagramClone.Services
             if (!response.IsSuccessStatusCode) return false;
             return true;
         }
-        public static async Task<bool> CreateMessage(int conversationId,string receiverUserName,string messageText)
+        public static async Task<bool> CreateMessage(int conversationId,string messageText,int user1Id, int user2Id,
+            bool isown,int loggedUserId)
         {
             await TokenValidator.CheckTokenValidity();
             var id = Preferences.Get("userId", 0);
@@ -184,9 +185,11 @@ namespace InstagramClone.Services
             var message = new MessageModel
             {
                 ConversationId = conversationId,
-                SenderUserId = id,
-                ReceiverUserName = receiverUserName,
-                Messagee = messageText
+                User1Id = user1Id,
+                User2Id=user2Id,
+                Messagee = messageText,
+                IsOwnMessage=isown,
+                LoggedUserId = loggedUserId
             };
             var jsonMessage = JsonConvert.SerializeObject(message);
             var content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");

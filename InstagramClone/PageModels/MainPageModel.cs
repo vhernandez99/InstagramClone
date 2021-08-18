@@ -34,7 +34,7 @@ namespace InstagramClone.PageModels
             {
                 return new Command(async () => {
                     //Push A Page Model
-                    await CoreMethods.PushPageModel<UsersListPageModel>();
+                    await CoreMethods.PushPageModel<ConversationsPageModel>();
                 });
             }
         }

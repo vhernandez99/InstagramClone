@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace InstagramClone.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class UsersListPage : ContentPage
+    public partial class ConversationsPage : ContentPage
     {
-        public UsersListPage()
+        public ConversationsPage()
         {
             InitializeComponent();
             UsersCv.ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical)

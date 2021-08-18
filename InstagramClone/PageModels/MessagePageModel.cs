@@ -71,7 +71,6 @@ namespace InstagramClone.Pages
                 return _externalName;
             }
         }
-        
         private int _conversationId;
         private string _message;
         private ObservableCollection<MessageModel> _messages;
@@ -87,6 +86,19 @@ namespace InstagramClone.Pages
             set
             {
                 _loggedUserName = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int _loggedUserId = Preferences.Get("userId", 0);
+        public int LoggedUserId
+        {
+            get
+            {
+                return _loggedUserId;
+            }
+            set
+            {
+                _loggedUserId = value;
                 RaisePropertyChanged();
             }
         }
@@ -114,7 +126,8 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
-        
+        public int User1Id { get; set; }
+        public int User2Id { get; set; }
         public bool IsConnected
         {
             get
@@ -140,6 +153,13 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
+
+
+        
+
+
+
+
         public ObservableCollection<MessageModel> Messages
         {
             get
@@ -170,11 +190,12 @@ namespace InstagramClone.Pages
                 });
             }
         }
+        public bool IsOwn { get; set; }
 
         public MessagePageModel()
         {
             Messages = new ObservableCollection<MessageModel>();
-            SendMessageCommand = new Command(async () => { await SendMessage(LoggedUserName, Message); });
+            SendMessageCommand = new Command(async () => { await SendMessage(); });
             ConnectCommand = new Command(async () => await Connect());
             DisconnectCommand = new Command(async () => await Disconnect());
             IsConnected = false;
@@ -198,9 +219,17 @@ namespace InstagramClone.Pages
                 await hubConnection.StartAsync();
                 await hubConnection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
                 IsConnected = true;
-                hubConnection.On<string, string>("ReceiveGroupMessage", (user, message) =>
+                hubConnection.On<string, string,int,int,int>("ReceiveGroupMessage", (user, message,user1Id,user2Id,loggeduserid) =>
                 {
-                    Messages.Add(new MessageModel() { UserName = user, Messagee = message, IsSystemMessage = false, IsOwnMessage = LoggedUserName == user });
+                    Messages.Add(new MessageModel() { 
+                        UserName = user, 
+                        Messagee = message,
+                        User1Id= user1Id,
+                        User2Id=user2Id,
+                        IsSystemMessage = false,
+                        IsOwnMessage = IsOwn= LoggedUserName == user,
+                        LoggedUserId = loggeduserid
+                    });
                 });
                 if (IsConnected)
                 {
@@ -213,89 +242,38 @@ namespace InstagramClone.Pages
                 await CoreMethods.DisplayAlert("", r.Message, "Ok");
             }      
         }
+        async Task SendMessage()
+        {
+            await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message,User1Id,User2Id, LoggedUserId);
+            await ApiService.CreateMessage(ConversationId, Message, User1Id, User2Id,IsOwn, LoggedUserId);
+            //await SendMessageNotification();
+            Message = "";
+        }
+        async Task GetAllConversationMessages()
+        {
+            List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId);
+            foreach (MessageModel message in messages)
+            {
+                Messages.Add(message);
+            }
+        }
         async Task Disconnect()
         {
-            
             await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
             await hubConnection.StopAsync();
             IsConnected = false;
 
         }
-        async Task SendMessageNotification()
-        {
-            var data = new { action = "Play", userId = 5 };
-            await GetUserLoggedInfo();
-            await ApiService.SendPushNotification(LoggedName, Message,data,ExternalUserTokenFirebase, LoggedUserFullImageUrl);
-        }
-        async Task SendMessage(string userName, string message)
-        {
-            await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), userName, message);
-            await ApiService.CreateMessage(ConversationId, ExternalUserName, message);
-            await SendMessageNotification();
-            Message = "";
-        }
-        async Task GetUserLoggedInfo()
-        {
-            var userLogged = await ApiService.GetUserLoggedInfo();
-
-            LoggedUserFullImageUrl = userLogged.FullImageUrl;
-            LoggedName = userLogged.Name;
-        }
-        async Task GetAllConversationMessages()
-        {
-            List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId);
-            foreach(MessageModel message in messages)
-            {
-                Messages.Add(message);
-            }
-        }
-        async Task CreateConversation(int userid2)
-        {
-            try
-            {
-                await ApiService.CreateConversation(userid2);
-            }
-            catch (Exception r)
-            {
-                await CoreMethods.DisplayAlert("CreateConversation", r.Message, "Ok");
-                return;
-            }
-        }
-        public async Task<int> VerifyIfConversationExists(int userid2)
-        {
-            try
-            {
-                ConversationId = await ApiService.VerifyIfConversationExists(userid2);
-                return ConversationId;
-            }
-            catch (Exception r)
-            {
-                await CoreMethods.DisplayAlert("VerifyIfConversationExists", r.Message, "Ok");
-                return 0;
-            }
-        }
+        
         public async override void Init(object initData)
         {
-            UsersGetList user = (UsersGetList)initData;
-            ExternalUserFullImageUrl = user.FullImageUrl;
-            ExternalUserName = user.UserName;
-            ExternalName = user.Name;
-            ExternalUserTokenFirebase.Add(user.TokenFirebase);
-            //verify if this conversation exists
-            if (IsBusy) { return; }
-            IsBusy = true;
-            await VerifyIfConversationExists(user.Id);
-            //if not create a new one and again use VerifyIfConversationExists method to save ConversationId property
-            if (ConversationId == 0)
-            {
-                await CreateConversation(user.Id);
-                await VerifyIfConversationExists(user.Id);
-            }
+
+            ConversationsUserGet conversation = (ConversationsUserGet)initData;
+            User1Id = conversation.User1Id;
+            User2Id = conversation.User2Id;
+            ConversationId = conversation.Id;
             await GetAllConversationMessages();
             await Connect();
-            IsBusy = false;
-            //GetLoggedUserInfo();
-            base.Init(initData);
         }
 
     }

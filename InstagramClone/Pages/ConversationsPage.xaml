@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InstagramClone.Pages.ConversationsPage"
+             BackgroundColor="White" 
+             x:Name="conversationsPage"
+             Title="Mensajes"
+             xmlns:ConversationSelector="clr-namespace:InstagramClone.Helper">
+    <ContentPage.Resources>
+        <ConversationSelector:ConversationSelector x:Key="SelectConversationTemplate"/>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid>
+            <CollectionView ItemsSource="{Binding ConversationsList}" 
+                            ItemTemplate="{StaticResource SelectConversationTemplate}"
+                            x:Name="UsersCv" 
+                            SelectionMode="Single" 
+                            Margin="20,15,20,0" SelectedItem="{Binding SelectedConversation}"
+                            >
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                           ItemSpacing="0"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Resources>
+                    <ResourceDictionary>
+                        <DataTemplate x:Key="Case1View">
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" BackgroundColor="Yellow">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToMessageCommand,Source={Reference conversationsPage}}"
+                                                          CommandParameter="{Binding .}"/>
+                                                          
+                                </Grid.GestureRecognizers>
+                                
+                                <StackLayout >
+                                    <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25">
+                                        <Image Source="{Binding FullUser2ImageUrl}" Aspect="AspectFill"/>
+                                    </Frame>
+                                </StackLayout>
+                                <StackLayout Grid.Column="1">
+                                    <Label Grid.Column="1" Text="{Binding User2Name}"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding LastMessage}" LineBreakMode="TailTruncation"/>
+                                </StackLayout>
+                            </Grid>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Case2View">
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" BackgroundColor="Yellow">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToMessageCommand,
+                                        Source={Reference conversationsPage}}"
+                                                          CommandParameter="{Binding .}"/>
+
+                                </Grid.GestureRecognizers>
+
+                                <StackLayout >
+                                    <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25">
+                                        <Image Source="{Binding FullUser1ImageUrl}" Aspect="AspectFill"/>
+                                    </Frame>
+                                </StackLayout>
+                                <StackLayout Grid.Column="1">
+                                    <Label Grid.Column="1" Text="{Binding User1Name}"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding LastMessage}" LineBreakMode="TailTruncation"/>
+                                </StackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </ResourceDictionary>
+                </CollectionView.Resources>
+
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -59,8 +59,8 @@ namespace InstagramClone
                 tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
                 
-                var usersListPage = FreshPageModelResolver.ResolvePageModel<UsersListPageModel>();
-                UsersListPageModel usersListPageModel = new UsersListPageModel();
+                var usersListPage = FreshPageModelResolver.ResolvePageModel<ConversationsPageModel>();
+                ConversationsPageModel usersListPageModel = new ConversationsPageModel();
                 tabbedPageContainer.PushPage(usersListPage, usersListPageModel);
 
                 //var messagePage = FreshPageModelResolver.ResolvePageModel<MessagePageModel>();

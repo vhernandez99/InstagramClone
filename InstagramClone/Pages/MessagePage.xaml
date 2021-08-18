@@ -29,7 +29,7 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.Resources>
                         <ResourceDictionary>
-                            <DataTemplate x:Key="OwnText">
+                            <DataTemplate x:Key="Case1View">
                                 <Grid ColumnDefinitions=".25*,*">
                                     <pancakeview:PancakeView
                                 BackgroundColor="Navy"
@@ -49,7 +49,7 @@
                                     </pancakeview:PancakeView>
                                 </Grid>
                             </DataTemplate>
-                            <DataTemplate x:Key="ExternalText">
+                            <DataTemplate x:Key="Case2View">
                                 <Grid Padding="10" ColumnDefinitions="Auto,.85*,.15*">
                                     <Frame Padding="0"
                                    CornerRadius="25"
@@ -60,7 +60,7 @@
                                    VerticalOptions="End"
                                    IsClippedToBounds="True"
                                    BackgroundColor="Gray">
-                                        <Image Source="{Binding Path=BindingContext.ExternalUserFullImageUrl,Source={x:Reference messageP}}"  Aspect="AspectFill"/>
+                                        <Image Source="{Binding }" Aspect="AspectFill"/>
                                     </Frame>
                                     <pancakeview:PancakeView 
                                 BackgroundColor="#E6E9EF"
@@ -77,6 +77,7 @@
                                     </pancakeview:PancakeView>
                                 </Grid>
                             </DataTemplate>
+                            
                         </ResourceDictionary>
                     </CollectionView.Resources>
                     <CollectionView.Footer>

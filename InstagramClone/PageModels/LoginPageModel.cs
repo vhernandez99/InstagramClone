@@ -14,7 +14,7 @@ namespace InstagramClone.PageModels
     {
         public Command LoginCommand => new Command(Login);
         public Command GoToSignUpPageCommand => new Command(GoToSignUpPage);
-        private string _UserName;
+        private string _UserName = "vhern99";
         public string UserName
         {
             set
@@ -27,7 +27,7 @@ namespace InstagramClone.PageModels
                 return _UserName;
             }
         }
-        private string _Password;
+        private string _Password = "123";
         public string Password
         {
             set
