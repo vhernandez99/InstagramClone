@@ -66,7 +66,7 @@ namespace InstagramClone.Droid.PushNotifications
                 .SetContentTitle(pTitle)
                 .SetContentText(pBody)
                 .SetAutoCancel(true)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.Logoinvertido))
+                //.SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.Logoinvertido))
                 .SetSmallIcon(Resource.Drawable.Logoinvertido)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
             var notification = builder.Build();

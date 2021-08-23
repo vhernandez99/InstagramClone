@@ -85,37 +85,21 @@ namespace InstagramClone.PageModels
         }
         public async Task GetAllConversations()
         {
+            ConversationsList.Clear();
             List<ConversationsUserGet> conversations = await ApiService.GetUserConversations();
             foreach(ConversationsUserGet conversation in conversations)
             {
                 ConversationsList.Add(conversation);
             }
         }
-        //public async Task GetAllUsers()
-        //{
-        //    try
-        //    {
-        //        List<UsersGetList> users = await ApiService.GetAllUsers();
-        //        foreach (UsersGetList user in users)
-        //        {
-        //            ConversationsList.Add(user);
-        //        }
-        //    }
-        //    catch (Exception r)
-        //    {
-        //        await CoreMethods.DisplayAlert("GetAllUsers", r.Message, "Ok");
-        //        return;
-        //    }
-        //}
         public ConversationsPageModel()
         {
             ConversationsList = new ObservableCollection<ConversationsUserGet>();
         }
 
-        public async override void Init(object initData)
+        protected async override void ViewIsAppearing(object sender, EventArgs e)
         {
             await GetAllConversations();
-            base.Init(initData);
         }
 
     }

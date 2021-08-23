@@ -12,7 +12,7 @@
             <CollectionView ItemsSource="{Binding PostCommentsCollection}" 
                             ItemsUpdatingScrollMode="KeepLastItemInView">
                 <CollectionView.Header>
-                    <Grid RowDefinitions="Auto" ColumnDefinitions="15,Auto,*,15">
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="10,Auto,*,10">
                         <StackLayout Grid.Column="1">
                             <Frame Padding="0" WidthRequest="50" HeightRequest="50" 
                                        CornerRadius="25">
@@ -28,11 +28,13 @@
                                               FontAttributes="Bold" TextColor="Black"/>
                                         <Span Text=" "/>
                                         <Span Text="{Binding Path=BindingContext.PostDescription,Source={Reference Comentariospage}}" 
-                                              TextColor="Black"/>
+                                              TextColor="Gray"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
+                            
                         </Grid>
+                        <BoxView Grid.Row="1" Color="LightGray" HeightRequest="1"  Grid.ColumnSpan="4"/>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>

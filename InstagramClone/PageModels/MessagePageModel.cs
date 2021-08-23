@@ -13,9 +13,8 @@ using Xamarin.Forms;
 
 namespace InstagramClone.Pages
 {
-    public class MessagePageModel: FreshBasePageModel
+    public class MessagePageModel : FreshBasePageModel
     {
-        
         private string _loggedUserFullImageUrl;
         public string LoggedUserFullImageUrl
         {
@@ -30,33 +29,6 @@ namespace InstagramClone.Pages
             }
         }
         public string LoggedName { get; set; }
-
-        private string _externalUserFullImageUrl;
-        public string ExternalUserFullImageUrl
-        {
-            set
-            {
-                _externalUserFullImageUrl = value;
-                RaisePropertyChanged();
-            }
-            get
-            {
-                return _externalUserFullImageUrl;
-            }
-        }        
-        private string _externalUserName;
-        public string ExternalUserName
-        {
-            set
-            {
-                _externalUserName = value;
-                RaisePropertyChanged();
-            }
-            get
-            {
-                return _externalUserName;
-            }
-        }
         private string _externalName;
         public List<string> ExternalUserTokenFirebase = new List<string>();
         public string ExternalName
@@ -71,8 +43,20 @@ namespace InstagramClone.Pages
                 return _externalName;
             }
         }
-        private int _conversationId;
-        private string _message;
+        private string _externalUserImageUrl;
+        public string ExternalUserImageUrl
+        {
+            set
+            {
+                _externalUserImageUrl = value;
+                RaisePropertyChanged();
+            }
+            get
+            {
+                return _externalUserImageUrl;
+            }
+        }
+        public int ExternalUserId { get; set; }
         private ObservableCollection<MessageModel> _messages;
         private bool _isConnected;
         //Actually unique UserName
@@ -102,6 +86,8 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
+        public string LoggedUserImageUrl { get; set; }
+        private int _conversationId;
         public int ConversationId
         {
             get
@@ -114,6 +100,7 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
+        private string _message;
         public string Message
         {
             get
@@ -140,7 +127,7 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
-        private bool _isBusy { get; set; }
+        private bool _isBusy;
         public bool IsBusy
         {
             get
@@ -150,15 +137,23 @@ namespace InstagramClone.Pages
             set
             {
                 _isBusy = value;
+                IsVisible = !value;
                 RaisePropertyChanged();
             }
         }
-
-
-        
-
-
-
+        private bool _isVisible;
+        public bool IsVisible
+        {
+            get
+            {
+                return _isVisible;
+            }
+            set
+            {
+                _isVisible = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public ObservableCollection<MessageModel> Messages
         {
@@ -176,11 +171,12 @@ namespace InstagramClone.Pages
         public Command SendMessageCommand { get; }
         public Command ConnectCommand { get; }
         public Command DisconnectCommand { get; }
-        public Command GoBackToUsersListCommand
+        public Command GoBackToUserConversations
         {
             get
             {
-                return new Command(async () => {
+                return new Command(async () =>
+                {
                     //Push A Page Model
                     if (IsBusy) { return; }
                     IsBusy = true;
@@ -190,8 +186,6 @@ namespace InstagramClone.Pages
                 });
             }
         }
-        public bool IsOwn { get; set; }
-
         public MessagePageModel()
         {
             Messages = new ObservableCollection<MessageModel>();
@@ -219,35 +213,60 @@ namespace InstagramClone.Pages
                 await hubConnection.StartAsync();
                 await hubConnection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
                 IsConnected = true;
-                hubConnection.On<string, string,int,int,int>("ReceiveGroupMessage", (user, message,user1Id,user2Id,loggeduserid) =>
-                {
-                    Messages.Add(new MessageModel() { 
-                        UserName = user, 
-                        Messagee = message,
-                        User1Id= user1Id,
-                        User2Id=user2Id,
-                        IsSystemMessage = false,
-                        IsOwnMessage = IsOwn= LoggedUserName == user,
-                        LoggedUserId = loggeduserid
+                hubConnection.On<string, string, int>("ReceiveGroupMessage", (user, message, loggeduserid) =>
+                    {
+                        Messages.Add(new MessageModel()
+                        {
+                            Messagee = message,
+                            LoggedUserId = loggeduserid,
+                        });
                     });
-                });
                 if (IsConnected)
                 {
                     return;
                 }
-                
+
             }
             catch (Exception r)
             {
                 await CoreMethods.DisplayAlert("", r.Message, "Ok");
-            }      
+            }
         }
         async Task SendMessage()
         {
-            await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message,User1Id,User2Id, LoggedUserId);
-            await ApiService.CreateMessage(ConversationId, Message, User1Id, User2Id,IsOwn, LoggedUserId);
-            //await SendMessageNotification();
+            IsBusy = true;
+            await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message, LoggedUserId);
+            await ApiService.CreateMessage(ConversationId, Message, LoggedUserId);
+            await SendMessageNotification();
             Message = "";
+            IsBusy = false;
+        }
+        async Task SendMessageNotification()
+        {
+            var data = new { action = "Play", userId = 5 };
+            await ApiService.SendPushNotification(LoggedName, Message, data, ExternalUserTokenFirebase,LoggedUserImageUrl);
+        }
+        async Task GetUserLoggedInfo()
+        {
+            var userLogged = await ApiService.GetUserLoggedInfo();
+            LoggedUserImageUrl = userLogged.FullImageUrl;
+            LoggedName = userLogged.Name;
+        }
+        async Task GetExternalUserInfo()
+        {
+
+            if (LoggedUserId == User1Id)
+            {
+                ExternalUserId = User2Id;
+            }
+            if (LoggedUserId == User2Id)
+            {
+                ExternalUserId = User1Id;
+            }
+            var user = await ApiService.GetUserInfo(ExternalUserId);
+            ExternalUserTokenFirebase.Add(user.TokenFirebase);
+            ExternalName = user.Name;
+            ExternalUserImageUrl = user.FullImageUrl;
         }
         async Task GetAllConversationMessages()
         {
@@ -262,18 +281,19 @@ namespace InstagramClone.Pages
             await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
             await hubConnection.StopAsync();
             IsConnected = false;
-
         }
-        
         public async override void Init(object initData)
         {
-
+            await GetUserLoggedInfo();
+            IsBusy = true;
             ConversationsUserGet conversation = (ConversationsUserGet)initData;
             User1Id = conversation.User1Id;
             User2Id = conversation.User2Id;
+            await GetExternalUserInfo();
             ConversationId = conversation.Id;
             await GetAllConversationMessages();
             await Connect();
+            IsBusy = false;
         }
 
     }

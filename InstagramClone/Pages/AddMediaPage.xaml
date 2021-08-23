@@ -7,7 +7,7 @@
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowDefinitions="100,*,100" ColumnDefinitions="100,*,100">
-            <Frame Grid.Column="1" Padding="0" WidthRequest="150" BackgroundColor="Transparent">
+            <Frame Grid.Column="1" Padding="0" WidthRequest="100" BackgroundColor="Transparent">
                 <Image Source="slife.png" Aspect="AspectFit"/>
             </Frame>
             <StackLayout Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
@@ -35,9 +35,9 @@
                 <Grid RowDefinitions="*">
                     <StackLayout>
                         <Frame Padding="0" BackgroundColor="Transparent" HeightRequest="300" WidthRequest="300">
-                            <Image Source="{Binding ImageUrl}" Aspect="Fill"/>
+                            <Image Source="{Binding ImageUrl}" Aspect="AspectFit"/>
                         </Frame>
-                        <Button Command="{Binding AddPostCommand}"/>
+                        <Button Command="{Binding AddPostCommand}" Text="Crear publicacion" VerticalOptions="EndAndExpand"/>
                     </StackLayout>
                     <ActivityIndicator IsRunning="{Binding TaskInProcess}"  IsVisible="{Binding TaskInProcess}" Color="Red" WidthRequest="50" HeightRequest="50" HorizontalOptions="CenterAndExpand" />
 

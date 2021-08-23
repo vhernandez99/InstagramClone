@@ -18,12 +18,13 @@
 					   VerticalOptions="StartAndExpand">
                     <Image Source="slife.png"/>
                 </Frame>
+                <Label Text="{Binding DteTime}"/>
                 <StackLayout Orientation="Horizontal" Spacing="30">
                     <ImageButton Source="search.png" WidthRequest="25" 
                                  HeightRequest="25" 
                                  HorizontalOptions="EndAndExpand" 
                                  BackgroundColor="Transparent"
-								 Command="{Binding GoToUsersListPageCommand}"/>
+								 Command="{Binding GoToSearchUserCommand}"/>
                     <!--<ImageButton  Source="heart" WidthRequest="25" 
                                   HeightRequest="25" 
                                   HorizontalOptions="EndAndExpand" 
@@ -90,7 +91,7 @@
                                 </Grid>
                                 <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="0">
                                     <Frame Padding="0" HeightRequest="400">
-                                        <Image Source="{Binding FullPostImageUrl,Mode=OneTime}" Aspect="AspectFill"/>
+                                        <Image Source="{Binding FullPostImageUrl,Mode=OneTime}" Aspect="AspectFit"/>
                                     </Frame>
                                     <StackLayout Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,0" 
 												 VerticalOptions="Start" 

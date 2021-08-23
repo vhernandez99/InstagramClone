@@ -16,5 +16,10 @@ namespace InstagramClone.Pages
         {
             InitializeComponent();
         }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            //SearchEntry.Focus();
+        }
     }
 }

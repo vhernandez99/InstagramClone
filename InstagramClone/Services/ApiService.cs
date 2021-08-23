@@ -37,6 +37,7 @@ namespace InstagramClone.Services
 
         public static async Task<bool> AddPost(string description, MediaFile file, byte[] postImageArray,string ImageExtension)
         {
+            var dateCreatedString = DateTime.Now.ToString();
             await TokenValidator.CheckTokenValidity();
             var id = Preferences.Get("userId", 0);
             var httpClient = new HttpClient();
@@ -44,6 +45,7 @@ namespace InstagramClone.Services
             {
                 { new StringContent(description), "Description" },
                 { new StringContent(ImageExtension), "ImageExtension" }
+                
             };
             content.Add(new StreamContent(new MemoryStream(postImageArray)), "Image", file.Path);
             var ApiResponse = await httpClient.PostAsync(AppSettings.ApiUrl + "api/posts/AddPost/" + id, content);
@@ -98,13 +100,29 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetUserConversations/"+id));
             return JsonConvert.DeserializeObject<List<ConversationsUserGet>>(response);
         }
+        public static async Task<ConversationsUserGet> GetConversationById(int id)
+        {
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetConversationById/" + id));
+            return JsonConvert.DeserializeObject<ConversationsUserGet>(response);
+        }
 
         public static async Task<List<UsersGetList>> GetAllUsers()
         {
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
-            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetAllUsers"));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetAllUsers?userName="));
+            return JsonConvert.DeserializeObject<List<UsersGetList>>(response);
+        }
+        public static async Task<List<UsersGetList>> SearchUsers(string initialtext)
+        {
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetAllUsers?userName=" + initialtext ));
             return JsonConvert.DeserializeObject<List<UsersGetList>>(response);
         }
         public static async Task<List<Comment>> GetPostComments(int id)
@@ -150,7 +168,9 @@ namespace InstagramClone.Services
             {
                 Description = description,
                 UserId = id,
-                PostId = postId
+                PostId = postId,
+                DateCreated = DateTime.Now
+
             };
             var jsonComment = JsonConvert.SerializeObject(comment);
             var content = new StringContent(jsonComment, Encoding.UTF8, "application/json");
@@ -175,8 +195,7 @@ namespace InstagramClone.Services
             if (!response.IsSuccessStatusCode) return false;
             return true;
         }
-        public static async Task<bool> CreateMessage(int conversationId,string messageText,int user1Id, int user2Id,
-            bool isown,int loggedUserId)
+        public static async Task<bool> CreateMessage(int conversationId,string messageText, int loggedUserId)
         {
             await TokenValidator.CheckTokenValidity();
             var id = Preferences.Get("userId", 0);
@@ -185,11 +204,9 @@ namespace InstagramClone.Services
             var message = new MessageModel
             {
                 ConversationId = conversationId,
-                User1Id = user1Id,
-                User2Id=user2Id,
                 Messagee = messageText,
-                IsOwnMessage=isown,
-                LoggedUserId = loggedUserId
+                LoggedUserId = loggedUserId,
+                DateCreated = DateTime.Now
             };
             var jsonMessage = JsonConvert.SerializeObject(message);
             var content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
@@ -214,7 +231,8 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetLoggedUserInfo/" + id));
             return JsonConvert.DeserializeObject<UserLogged>(response);
         }
-        public static async Task<bool> SendPushNotification(string title, string body, object data,List<string> firebaseToken,string externalUserImageUrl)
+        public static async Task<bool> SendPushNotification(string title, string body, object data,
+            List<string> firebaseToken,string externalUserImageUrl)
         {
             await TokenValidator.CheckTokenValidity();
             //var usersTokens = await ApiService.GetAllTokens();
@@ -227,7 +245,6 @@ namespace InstagramClone.Services
                     title = title,
                     body = body,
                     image = externalUserImageUrl
-
                 },
                 data = data,
                 registration_ids = firebaseToken.ToArray()

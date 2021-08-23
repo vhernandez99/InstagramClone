@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Gms.Common;
 using Xamarin.Essentials;
 using Android.Views;
+using Syncfusion.Licensing;
 
 namespace InstagramClone.Droid
 {
@@ -15,6 +16,7 @@ namespace InstagramClone.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
             //if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat) { Window.SetFlags(WindowManagerFlags.LayoutNoLimits, WindowManagerFlags.LayoutNoLimits); }
             base.OnCreate(savedInstanceState);
             IsplayServicesAvailable();

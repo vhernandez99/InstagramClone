@@ -8,5 +8,6 @@ namespace InstagramClone.Models
     {
         public string Description { get; set; }
         public byte[] ImageArray { get; set; }
+        public DateTime DateCreated => DateTime.Now;
     }
 }

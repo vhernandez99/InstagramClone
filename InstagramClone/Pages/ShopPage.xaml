@@ -1,12 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="InstagramClone.Pages.ShopPage">
+             x:Class="InstagramClone.Pages.ShopPage" 
+             BackgroundColor="White"
+             xmlns:Renderers="clr-namespace:InstagramClone.Renderers"
+             Title="Tienda"
+             xmlns:selectors="clr-namespace:InstagramClone.Helper"
+             x:Name="ShopP"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    <ContentPage.Resources>
+        <selectors:SellingItemsPostsConverter x:Key="SelectPostTemplate"/>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <RefreshView Command="{Binding Path=BindingContext.RefreshSellingItemsCommand,Source={Reference ShopP}}">
+            <Grid RowDefinitions="Auto" Margin="10,0,10,0">
+                <Frame CornerRadius="10" Padding="0" 
+                           BackgroundColor="#efefef">
+                    <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
+                        <Renderers:BorderlessSearchBar Placeholder="Buscar productos" 
+                                                   Text="{Binding SearchSellingItemsText}"
+                                                   BackgroundColor="#efefef">
+
+                        </Renderers:BorderlessSearchBar>
+                    </StackLayout>
+                </Frame>
+
+                <CollectionView Grid.Row="1" SelectionMode="Single" ItemsSource="{Binding SellingItemsPosts}" Margin="0" 
+                            ItemTemplate="{StaticResource SelectPostTemplate}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Span="2" VerticalItemSpacing="2" 
+                                     HorizontalItemSpacing="2" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.Resources>
+                        <ResourceDictionary>
+                            <DataTemplate x:Key="OwnPost">
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="Auto">
+                                    <Frame Padding="0" WidthRequest="200" HeightRequest="200" CornerRadius="5" 
+                                           xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.DeleteSellinItemPostCommand,Source={Reference ShopP}}">
+                                        <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"/>
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                            <DataTemplate x:Key="ExternalPost">
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="Auto">
+                                    <Frame Padding="0" WidthRequest="200" HeightRequest="200" CornerRadius="5"   >
+                                         
+                                        <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"/>
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                        </ResourceDictionary>
+                    </CollectionView.Resources>
+
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+        
     </ContentPage.Content>
 </ContentPage>

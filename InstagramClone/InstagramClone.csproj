@@ -15,6 +15,9 @@
     <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Syncfusion.Licensing" Version="16.4.0.52" />
+    <PackageReference Include="Syncfusion.Xamarin.SfImageEditor" Version="16.4.0.52" />
+    <PackageReference Include="Syncfusion.Xamarin.SfPopupLayout" Version="16.4.0.52" />
     <PackageReference Include="Xam.Plugin.ImageArray" Version="1.0.0" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
@@ -28,9 +31,6 @@
     <Compile Update="Pages\AddMediaPage.xaml.cs">
       <DependentUpon>AddMediaPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\InitialPage.xaml.cs">
-      <DependentUpon>InitialPage.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Pages\ConversationsPage.xaml.cs">
       <DependentUpon>ConversationsPage.xaml</DependentUpon>
     </Compile>
@@ -38,9 +38,6 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Pages\AddMediaPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Pages\InitialPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\LoginPage.xaml">

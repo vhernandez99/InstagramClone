@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
-
+using Syncfusion.Licensing;
 using InstagramClone.PageModels;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Essentials;
@@ -13,6 +13,7 @@ namespace InstagramClone
 {
     public partial class App : Xamarin.Forms.Application
     {
+        
         public class NavigationContainerNames
         {
             public static string AuthenticationContainer = "LoginPage";
@@ -22,6 +23,7 @@ namespace InstagramClone
         }
         public App(bool shallNavigate)
         {
+            SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
             InitializeComponent();
             var accessToken = Preferences.Get("accessToken", string.Empty); 
             var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
@@ -68,7 +70,7 @@ namespace InstagramClone
                 //tabbedPageContainer.PushPage(messagePage, messagePageModel);
                 MainPage = tabbedPageContainer;
             }
-            else
+            else if(string.IsNullOrEmpty(accessToken))
             {
                 MainPage = mainPageContainer;
             }
@@ -87,5 +89,6 @@ namespace InstagramClone
         {
 
         }
+        
     }
 }

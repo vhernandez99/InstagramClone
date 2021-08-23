@@ -4,11 +4,12 @@ using System.Text;
 
 namespace InstagramClone.Models
 {
-    class CommentAdd
+    public class SellingItemPostAdd
     {
+        public string Name { get; set; }
+        public double Price { get; set; }
         public string Description { get; set; }
+        public string ImageUrl { get; set; }
         public int UserId { get; set; }
-        public int PostId { get; set; }
-        public DateTime DateCreated { get; set; }
     }
 }

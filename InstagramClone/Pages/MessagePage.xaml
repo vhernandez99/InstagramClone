@@ -11,7 +11,7 @@
              xmlns:editor="clr-namespace:InstagramClone.Renderers">
              
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Regresar" Order="Primary" Command="{Binding GoBackToUsersListCommand}" >
+        <ToolbarItem Text="Regresar" Order="Primary" Command="{Binding GoBackToUserConversations}" >
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
@@ -60,8 +60,8 @@
                                    VerticalOptions="End"
                                    IsClippedToBounds="True"
                                    BackgroundColor="Gray">
-                                        <Image Source="{Binding }" Aspect="AspectFill"/>
-                                    </Frame>
+                                        <Image Source="{Binding Path=BindingContext.ExternalUserImageUrl,Source={x:Reference messageP}}" Aspect="AspectFill"/>
+                                    </Frame> 
                                     <pancakeview:PancakeView 
                                 BackgroundColor="#E6E9EF"
                                 Grid.Column="1"
@@ -91,10 +91,11 @@
             <pancakeview:PancakeView BackgroundColor="#E6E9EF" Grid.Row="1" CornerRadius="15" Margin="15,0,25,15" >
                 <Grid ColumnDefinitions=".1*,.8*,.1*">
                     <ImageButton Source="gallery" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
-                    <editor:BorderlessEditor Placeholder="Escribe un mensae" Text="{Binding Message}" Grid.Column="1" AutoSize="TextChanges"/>
+                    <editor:BorderlessEditor Placeholder="Escribe un mensaje" Text="{Binding Message}" Grid.Column="1" AutoSize="TextChanges"/>
                     <ImageButton Source="sendmessage.png" BackgroundColor="Transparent" Grid.Column="2" 
-                             VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
-                             Command="{Binding SendMessageCommand}"/>
+                                 IsVisible="{Binding IsVisible}"
+                                 VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                 Command="{Binding SendMessageCommand}"/>
                 </Grid>
             </pancakeview:PancakeView>
         </Grid>

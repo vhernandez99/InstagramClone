@@ -2,52 +2,66 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:entry="clr-namespace:InstagramClone.Renderers"
              x:Class="InstagramClone.Pages.SearchPage"
-             NavigationPage.HasNavigationBar="False"
              BackgroundColor="White"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:Renderers="clr-namespace:InstagramClone.Renderers"
+             x:Name="SearchP"
+             Title="Buscar personas"
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms">
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,Auto">
-            <CollectionView Grid.Row="1" ItemsSource="{Binding Images}" Margin="10,0,10,10">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="5" HorizontalItemSpacing="3"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.Header>
-                    <Frame CornerRadius="10" Padding="0" Margin="0,0,0,0" 
+            <RefreshView Command="{Binding Path=BindingContext.RefreshUsersCommand,Source={Reference SearchP}}">
+                <CollectionView Grid.Row="1" ItemsSource="{Binding Users}" Margin="10,0,10,10" SelectionMode="Single">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="10" 
+                                     HorizontalItemSpacing="3"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.EmptyView>
+                        <Label Text="No se encontraron resultados..."/>
+                    </CollectionView.EmptyView>
+                    <CollectionView.Header>
+                        <Frame CornerRadius="10" Padding="0" Margin="0,0,0,0" 
                            BackgroundColor="#efefef">
-                        <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
-                            <Image Grid.Column="1" Source="search.png" HorizontalOptions="Start" Margin="10,0,0,0"
-                           WidthRequest="20" BackgroundColor="Transparent" />
-                            <entry:BorderlessEntry BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
-                                <entry:BorderlessEntry.Behaviors>
-                                    <xct:EventToCommandBehavior EventName="Focused" Command="{Binding GoToSearchingPage}"/>
-                                </entry:BorderlessEntry.Behaviors>
-                            </entry:BorderlessEntry>
-                        </StackLayout>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToSearchingPage}"/>
-                        </Frame.GestureRecognizers>
-                    </Frame>
-                </CollectionView.Header>
-                
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="139,0.25*,0.25*,0.25*" RowDefinitions="130,130,Auto,Auto">
-                            <Frame Padding="0" Grid.Column="0" 
-                                   HeightRequest="130" WidthRequest="200">
-                                <Image Source="{Binding ImageUrl}" Aspect="Fill"/>
-                            </Frame>
-                            <Frame Padding="0" Grid.Column="0" Grid.Row="1"
-                                   HeightRequest="130" WidthRequest="200">
-                                <Image Source="{Binding ImageUrl2}" Aspect="Fill"/>
-                            </Frame>
-                            <Frame Padding="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2"
-                                   HeightRequest="130" WidthRequest="200">
-                                <Image Source="{Binding ImageUrl3}" Aspect="AspectFill"/>
-                            </Frame>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                            <Renderers:BorderlessSearchBar x:Name="SearchEntry" HorizontalOptions="FillAndExpand" 
+                                                           BackgroundColor="#efefef" Placeholder="Buscar"
+                                                           Text="{Binding SearchBarText,Mode=OneWayToSource}"
+                                                           SearchCommand="{Binding SearchUsersCommand}">
+
+                                <!--<Renderers:BorderlessSearchBar.Behaviors>
+                                    <xct:UserStoppedTypingBehavior Command="{Binding SearchUsersCommand}"/>
+                                </Renderers:BorderlessSearchBar.Behaviors>-->
+                            </Renderers:BorderlessSearchBar>
+                        </Frame>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,*" >
+                                <StackLayout>
+                                    <Frame Padding="0" WidthRequest="50" HeightRequest="50" CornerRadius="25">
+                                        <Image Source="{Binding FullImageUrl}" Aspect="AspectFill"/>
+                                    </Frame>
+                                </StackLayout>
+                                <Grid Grid.Column="1" ColumnDefinitions="*,0.1*,Auto">
+                                        <Label Text="{Binding Name}" TextColor="Black" LineBreakMode="TailTruncation"/>
+                                        <Label TextColor="Black" Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="@"/>
+                                                    <Span Text="{Binding UserName}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    <Label Grid.Column="2" Grid.Row="0" Text="Enviar mensaje" TextColor="#427da4" FontAttributes="Bold" FontSize="15">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToMessagesCommand,Source={Reference SearchP}}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

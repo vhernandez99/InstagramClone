@@ -1,6 +1,7 @@
 ﻿using FreshMvvm;
 using InstagramClone.Models;
 using InstagramClone.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -35,6 +36,16 @@ namespace InstagramClone.PageModels
                 return new Command(async () => {
                     //Push A Page Model
                     await CoreMethods.PushPageModel<ConversationsPageModel>();
+                });
+            }
+        }
+        public Command GoToSearchUserCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await CoreMethods.PushPageModel<SearchPageModel>();
                 });
             }
         }
@@ -167,7 +178,6 @@ namespace InstagramClone.PageModels
             UserLoggedImageUrl = userLoggedInfo.FullImageUrl;
             UserNameLogged = userLoggedInfo.UserName;
         }
-        
         public override async void Init(object initData)
         {
             await GetUserLoggedInfo();

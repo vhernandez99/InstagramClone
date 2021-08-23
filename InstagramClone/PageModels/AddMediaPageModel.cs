@@ -4,6 +4,7 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Syncfusion.SfImageEditor.XForms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ namespace InstagramClone.PageModels
 {
     public class AddMediaPageModel: FreshBasePageModel
     {
+        
         public MediaFile file;
         private string _Description;
         public string Description
@@ -93,8 +95,7 @@ namespace InstagramClone.PageModels
             }
             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
-                PhotoSize = PhotoSize.Custom,
-                CustomPhotoSize=50,
+                PhotoSize = PhotoSize.Medium,
                 CompressionQuality = 45,
                 AllowCropping = true
             }) ;
@@ -105,7 +106,7 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
-            ImageExtension = Path.GetExtension(file.Path);
+            ImageExtension= ImageExtension = Path.GetExtension(file.Path);
         }
         public Command AddPostCommand => new Command(async () => await AddPost());
         private async Task OpenGallery()
@@ -118,8 +119,8 @@ namespace InstagramClone.PageModels
             file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
             {
                 //MaxWidthHeight=300,
-                PhotoSize=PhotoSize.Small,
-                CompressionQuality = 35
+                PhotoSize=PhotoSize.Medium,
+                CompressionQuality = 45
             });
             if (file == null)
                 return;
@@ -141,7 +142,7 @@ namespace InstagramClone.PageModels
         {
             await GetUserLoggedInfo();
         }
-        private async Task AddPost()
+        public async Task AddPost()
         {
             if (TaskInProcess) { return; }
             TaskInProcess = true;

@@ -16,5 +16,6 @@ namespace InstagramClone.Models
         public string User2ImageUrl { get; set; }
         public string FullUser2ImageUrl => AppSettings.ApiUrl + User2ImageUrl;
         public string LastMessage { get; set; }
+        public DateTime LastMessageDateCreated { get; set; }
     }
 }
