@@ -6,8 +6,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -15,6 +19,14 @@ namespace InstagramClone.Pages
 {
     public class MessagePageModel : FreshBasePageModel
     {
+        private readonly HubConnection _connection;
+        private ConnectionState _connectionState = ConnectionState.Disconnected;
+        private enum ConnectionState
+        {
+            Connected,
+            Disconnected,
+            Faulted
+        }
         private string _loggedUserFullImageUrl;
         public string LoggedUserFullImageUrl
         {
@@ -167,8 +179,7 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
-        private HubConnection hubConnection;
-        public Command SendMessageCommand { get; }
+        public ICommand SendMessageCommand { get; }
         public Command ConnectCommand { get; }
         public Command DisconnectCommand { get; }
         public Command GoBackToUserConversations
@@ -181,7 +192,7 @@ namespace InstagramClone.Pages
                     if (IsBusy) { return; }
                     IsBusy = true;
                     await CoreMethods.PopPageModel();
-                    await Disconnect();
+                    //await Disconnect();
                     IsBusy = false;
                 });
             }
@@ -189,58 +200,80 @@ namespace InstagramClone.Pages
         public MessagePageModel()
         {
             Messages = new ObservableCollection<MessageModel>();
-            SendMessageCommand = new Command(async () => { await SendMessage(); });
+            SendMessageCommand = new AsyncCommand(SendMessage, allowsMultipleExecutions: false);
             ConnectCommand = new Command(async () => await Connect());
-            DisconnectCommand = new Command(async () => await Disconnect());
-            IsConnected = false;
+            //DisconnectCommand = new Command(async () => await Disconnect());
+            var connection = new HubConnectionBuilder();
+            _connection = connection.WithUrl($"https://www.vhernandezapps.info/chatHub").Build();
+            // Subscribe to event
+            _connection.Closed +=(ex) =>
+            {
+                if (ex == null)
+                {
+                    Trace.WriteLine("Connection terminated");
+                    _connectionState = ConnectionState.Disconnected;
+                }
+                else
+                {
+                    Trace.WriteLine($"Connection terminated with error: {ex.GetType()}: {ex.Message}");
+                    _connectionState = ConnectionState.Faulted;
+                }
+                return null;
+            };
         }
         async Task Connect()
         {
+            if (_connectionState == ConnectionState.Connected)
+            {
+                return;
+            }
             try
             {
-                hubConnection = new HubConnectionBuilder()
-         .WithUrl($"https://www.vhernandezapps.info/chatHub")
-         .Build();
-                //hubConnection.On<string>("JoinGroupMessage", (user) =>
-                //{
-                //    Messages.Add(new MessageModel() { UserName = UserName, Message = $"{user} has joined the chat group", IsSystemMessage = true });
-                //});
-
-                //hubConnection.On<string>("LeaveGroupMessage", (user) =>
-                //{
-                //    Messages.Add(new MessageModel() { UserName = UserName, Message = $"{user} has left the chat group", IsSystemMessage = true });
-                //});
-                await hubConnection.StartAsync();
-                await hubConnection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
-                IsConnected = true;
-                hubConnection.On<string, string, int>("ReceiveGroupMessage", (user, message, loggeduserid) =>
-                    {
-                        Messages.Add(new MessageModel()
-                        {
-                            Messagee = message,
-                            LoggedUserId = loggeduserid,
-                        });
-                    });
-                if (IsConnected)
+                await _connection.StartAsync();
+                await _connection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
+                _connection.On<string, string, int>("ReceiveGroupMessage", (user, message, loggeduserid) =>
                 {
-                    return;
-                }
-
+                    Messages.Add(new MessageModel()
+                    {
+                        Messagee = message,
+                        LoggedUserId = loggeduserid,
+                    });
+                });
+                _connectionState = ConnectionState.Connected;
             }
-            catch (Exception r)
+            catch (Exception ex)
             {
-                await CoreMethods.DisplayAlert("", r.Message, "Ok");
+                Trace.WriteLine($"Connection.Start Failed: {ex.GetType()}: {ex.Message}");
+                _connectionState = ConnectionState.Faulted;
+                throw;
             }
+
+
         }
         async Task SendMessage()
         {
-            IsBusy = true;
-            await hubConnection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message, LoggedUserId);
+            if (_connectionState != ConnectionState.Connected)
+            {
+                await Connect();
+            }
+            if (_connectionState == ConnectionState.Connected)
+            {
+                await _connection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message, LoggedUserId);
+            }
             await ApiService.CreateMessage(ConversationId, Message, LoggedUserId);
             await SendMessageNotification();
             Message = "";
-            IsBusy = false;
         }
+        async Task Disconnect()
+        {
+            if (_connectionState == ConnectionState.Connected)
+            {
+                await _connection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
+                await _connection.StopAsync();
+            }
+        }
+
+        
         async Task SendMessageNotification()
         {
             var data = new { action = "Play", userId = 5 };
@@ -276,12 +309,7 @@ namespace InstagramClone.Pages
                 Messages.Add(message);
             }
         }
-        async Task Disconnect()
-        {
-            await hubConnection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
-            await hubConnection.StopAsync();
-            IsConnected = false;
-        }
+
         public async override void Init(object initData)
         {
             await GetUserLoggedInfo();
@@ -292,9 +320,20 @@ namespace InstagramClone.Pages
             await GetExternalUserInfo();
             ConversationId = conversation.Id;
             await GetAllConversationMessages();
+
+            IsBusy = false;
+        }
+        protected async override void ViewIsAppearing(object sender, EventArgs e)
+        {
+            IsBusy = true;
             await Connect();
             IsBusy = false;
         }
-
+        protected async override void ViewIsDisappearing(object sender, EventArgs e)
+        {
+            IsBusy = true;
+            await Disconnect();
+            IsBusy = false;
+        }
     }
 }

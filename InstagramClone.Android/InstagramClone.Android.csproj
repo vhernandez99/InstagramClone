@@ -76,9 +76,6 @@
     <PackageReference Include="Syncfusion.Licensing">
       <Version>16.4.0.52</Version>
     </PackageReference>
-    <PackageReference Include="Syncfusion.Xamarin.SfImageEditor">
-      <Version>16.4.0.52</Version>
-    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfPopupLayout">
       <Version>16.4.0.52</Version>
     </PackageReference>
@@ -222,6 +219,7 @@
     <AndroidResource Include="Resources\drawable\sendmessage.png" />
     <AndroidResource Include="Resources\drawable\notificacion.png" />
     <AndroidResource Include="Resources\drawable\search.png" />
+    <AndroidResource Include="Resources\drawable\plus.png" />
     <Content Include="values\ic_launcher_background.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

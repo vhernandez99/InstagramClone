@@ -4,7 +4,6 @@ using InstagramClone.Models;
 using InstagramClone.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Syncfusion.SfImageEditor.XForms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +15,6 @@ namespace InstagramClone.PageModels
 {
     public class AddMediaPageModel: FreshBasePageModel
     {
-        
         public MediaFile file;
         private string _Description;
         public string Description
@@ -106,7 +104,7 @@ namespace InstagramClone.PageModels
                 var stream = file.GetStream();
                 return stream;
             });
-            ImageExtension= ImageExtension = Path.GetExtension(file.Path);
+            ImageExtension = Path.GetExtension(file.Path);
         }
         public Command AddPostCommand => new Command(async () => await AddPost());
         private async Task OpenGallery()

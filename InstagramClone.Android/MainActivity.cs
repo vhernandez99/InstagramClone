@@ -16,7 +16,7 @@ namespace InstagramClone.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
+            //SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
             //if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat) { Window.SetFlags(WindowManagerFlags.LayoutNoLimits, WindowManagerFlags.LayoutNoLimits); }
             base.OnCreate(savedInstanceState);
             IsplayServicesAvailable();
@@ -35,7 +35,7 @@ namespace InstagramClone.Droid
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        } 
         public void IsplayServicesAvailable()
         {
             int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);

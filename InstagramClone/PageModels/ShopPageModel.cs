@@ -39,7 +39,8 @@ namespace InstagramClone.PageModels
         }
         public ICommand RefreshSellingItemsCommand { get; }
         public ICommand DeleteSellinItemPostCommand { get; }
-        public ICommand GoToDetailsSellingItemCommand { get; }
+        public ICommand GoToShopItemDetailsCommand { get; }
+        public ICommand GoToAddShopItemPageCommand { get; }
         private async Task GetAllSellingItemsPosts()
         {
             var posts=await ApiService.GetAllPosts(1,5);
@@ -53,12 +54,19 @@ namespace InstagramClone.PageModels
             SellingItemsPosts = new ObservableCollection<Post>();
             RefreshSellingItemsCommand = new AsyncCommand(GetAllSellingItemsPosts, allowsMultipleExecutions: false);
             DeleteSellinItemPostCommand = new AsyncCommand(DeleteSellinItemPost, allowsMultipleExecutions: true);
-            GoToDetailsSellingItemCommand = new AsyncCommand<object>(GoToDetailsSelling, allowsMultipleExecutions: false);
+            GoToAddShopItemPageCommand = new AsyncCommand(GoToAddShopItemPage, allowsMultipleExecutions: false);
+            GoToShopItemDetailsCommand = new AsyncCommand<Post>(GoToShopItemDetails, allowsMultipleExecutions: false);
         }
 
-        private Task GoToDetailsSelling(object arg)
+
+        private async Task GoToShopItemDetails(object obj)
         {
-            throw new NotImplementedException();
+            await CoreMethods.PushPageModel<ShopItemDetailsPageModel>(obj);
+        }
+
+        private async Task GoToAddShopItemPage()
+        {
+            await CoreMethods.PushPageModel<AddShopItemPageModel>(); 
         }
 
         private async Task DeleteSellinItemPost()

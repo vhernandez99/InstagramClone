@@ -37,7 +37,6 @@ namespace InstagramClone.Services
 
         public static async Task<bool> AddPost(string description, MediaFile file, byte[] postImageArray,string ImageExtension)
         {
-            var dateCreatedString = DateTime.Now.ToString();
             await TokenValidator.CheckTokenValidity();
             var id = Preferences.Get("userId", 0);
             var httpClient = new HttpClient();

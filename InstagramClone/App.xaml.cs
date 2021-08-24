@@ -23,13 +23,12 @@ namespace InstagramClone
         }
         public App(bool shallNavigate)
         {
-            SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
+            //SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
             InitializeComponent();
-            var accessToken = Preferences.Get("accessToken", string.Empty); 
-            var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
-            var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
+            var accessToken = Preferences.Get("accessToken", string.Empty);
+
             //if(string.IsNullOrEmpty(accessToken))
-            if (!string.IsNullOrEmpty(accessToken))
+            if (!string.IsNullOrEmpty(accessToken) && shallNavigate == false)
             {
                 var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
                 tabbedPageContainer.SelectedTabColor = Color.Black;
@@ -50,28 +49,24 @@ namespace InstagramClone
             }
             if (shallNavigate && !string.IsNullOrEmpty(accessToken))
             {
-                var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.UsersListPage);
+                var tabbedPageContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
                 tabbedPageContainer.SelectedTabColor = Color.Black;
                 tabbedPageContainer.BarBackgroundColor = Color.White;
                 tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
                 tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
-                //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
                 tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
-                
                 var usersListPage = FreshPageModelResolver.ResolvePageModel<ConversationsPageModel>();
-                ConversationsPageModel usersListPageModel = new ConversationsPageModel();
-                tabbedPageContainer.PushPage(usersListPage, usersListPageModel);
-
-                //var messagePage = FreshPageModelResolver.ResolvePageModel<MessagePageModel>();
-                //MessagePageMode.l messagePageModel = new MessagePageModel();
-                //tabbedPageContainer.PushPage(messagePage, messagePageModel);
+                //ConversationsPageModel usersListPageModel = new ConversationsPageModel();
+                //tabbedPageContainer.PushPage(usersListPage, usersListPageModel);
                 MainPage = tabbedPageContainer;
             }
             else if(string.IsNullOrEmpty(accessToken))
             {
+                var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
+                var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
                 MainPage = mainPageContainer;
             }
         }

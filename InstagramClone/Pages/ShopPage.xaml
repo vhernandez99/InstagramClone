@@ -8,6 +8,9 @@
              xmlns:selectors="clr-namespace:InstagramClone.Helper"
              x:Name="ShopP"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="plus.png" Command="{Binding Path=BindingContext.GoToAddShopItemPageCommand,Source={Reference ShopP}}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <selectors:SellingItemsPostsConverter x:Key="SelectPostTemplate"/>
     </ContentPage.Resources>
@@ -20,7 +23,6 @@
                         <Renderers:BorderlessSearchBar Placeholder="Buscar productos" 
                                                    Text="{Binding SearchSellingItemsText}"
                                                    BackgroundColor="#efefef">
-
                         </Renderers:BorderlessSearchBar>
                     </StackLayout>
                 </Frame>
@@ -38,6 +40,10 @@
                                     <Frame Padding="0" WidthRequest="200" HeightRequest="200" CornerRadius="5" 
                                            xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.DeleteSellinItemPostCommand,Source={Reference ShopP}}">
                                         <Image Source="{Binding FullPostImageUrl}" Aspect="AspectFill"/>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToShopItemDetailsCommand,Source={Reference ShopP}}" 
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
                                     </Frame>
                                 </Grid>
                             </DataTemplate>
