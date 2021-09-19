@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using static InstagramClone.App;
 
@@ -28,7 +29,7 @@ namespace InstagramClone.PageModels
                 RaisePropertyChanged();
             }
         }
-        public Command GoToMessageCommand => new Command<ConversationsUserGet>(GoToMessage);
+        public ICommand GoToMessageCommand { get; }
         ConversationsUserGet _conversationUserGet = null;
         public ConversationsUserGet SelectedConversation
         {
@@ -78,7 +79,7 @@ namespace InstagramClone.PageModels
                 return _lastConversationMessage;
             }
         }
-        private async void GoToMessage(ConversationsUserGet obj)
+        private async Task GoToMessage(ConversationsUserGet obj)
         {
             await CoreMethods.PushPageModel<MessagePageModel>(obj);
             SelectedConversation = null;
@@ -92,14 +93,14 @@ namespace InstagramClone.PageModels
                 ConversationsList.Add(conversation);
             }
         }
-        public ConversationsPageModel()
-        {
-            ConversationsList = new ObservableCollection<ConversationsUserGet>();
-        }
-
         protected async override void ViewIsAppearing(object sender, EventArgs e)
         {
             await GetAllConversations();
+        }
+        public ConversationsPageModel()
+        {
+            GoToMessageCommand = new AsyncCommand<ConversationsUserGet>(GoToMessage, allowsMultipleExecutions: false);
+            ConversationsList = new ObservableCollection<ConversationsUserGet>();
         }
 
     }

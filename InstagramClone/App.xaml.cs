@@ -26,7 +26,8 @@ namespace InstagramClone
             //SyncfusionLicenseProvider.RegisterLicense("NDkxNTk2QDMxMzYyZTM0MmUzMEtvV1hJeEJMdkN4MElKUWRyM09LaTJSa2oxR0NPK1V5OVgvdnZzZGRrTk09");
             InitializeComponent();
             var accessToken = Preferences.Get("accessToken", string.Empty);
-
+            var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
+            var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
             //if(string.IsNullOrEmpty(accessToken))
             if (!string.IsNullOrEmpty(accessToken) && shallNavigate == false)
             {
@@ -38,7 +39,7 @@ namespace InstagramClone
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
                 //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
-                tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+                tabbedPageContainer.AddTab<SellingItemsPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
 
                 //var messagePage = FreshPageModelResolver.ResolvePageModel<MessagePageModel>();
@@ -56,7 +57,7 @@ namespace InstagramClone
                 tabbedPageContainer.On<Xamarin.Forms.PlatformConfiguration.Android>().DisableSwipePaging();
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
-                tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+                tabbedPageContainer.AddTab<SellingItemsPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
                 var usersListPage = FreshPageModelResolver.ResolvePageModel<ConversationsPageModel>();
                 //ConversationsPageModel usersListPageModel = new ConversationsPageModel();
@@ -65,8 +66,8 @@ namespace InstagramClone
             }
             else if(string.IsNullOrEmpty(accessToken))
             {
-                var loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
-                var mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
+                loginPage = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
+                mainPageContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
                 MainPage = mainPageContainer;
             }
         }

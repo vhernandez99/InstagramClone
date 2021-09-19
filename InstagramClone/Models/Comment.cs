@@ -10,10 +10,7 @@ namespace InstagramClone.Models
         public int Id { get; set; }
         public string Description { get; set; }
         public string UserName { get; set; }
-        public string FullComment => Description + " " + UserName;
-        public string PostDescription { get; set; }
         public string UserImageUrl { get; set; }
         public string FullUserImageUrl => AppSettings.ApiUrl + UserImageUrl;
-
     }
 }

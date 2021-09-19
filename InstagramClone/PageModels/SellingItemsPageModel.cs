@@ -11,7 +11,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace InstagramClone.PageModels
 {
-    public class ShopPageModel : FreshBasePageModel
+    public class SellingItemsPageModel : FreshBasePageModel
     {
         private string _searchSellingItemsText;
         public string SearchSellingItemsText
@@ -49,7 +49,7 @@ namespace InstagramClone.PageModels
                 SellingItemsPosts.Add(post);
             }
         }
-        public ShopPageModel()
+        public SellingItemsPageModel()
         {
             SellingItemsPosts = new ObservableCollection<Post>();
             RefreshSellingItemsCommand = new AsyncCommand(GetAllSellingItemsPosts, allowsMultipleExecutions: false);

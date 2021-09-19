@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 
 namespace InstagramClone.PageModels
@@ -14,6 +17,7 @@ namespace InstagramClone.PageModels
     public class PostCommentsPageModel: FreshBasePageModel
     {
         public Command PostCommentCommand => new Command(PostComment);
+        public ICommand RemainingItemsThresholdReachedCommand { get; }
         public ObservableCollection<Comment> PostCommentsCollection { get; set; }
         public int PostId { get; set; }
         public string UserImageUrl { get; set; }
@@ -59,10 +63,13 @@ namespace InstagramClone.PageModels
                 return _CommentText;
             }
         }
-        public async void GetPostComments()
+        private int PageNumber { get; set; }
+        private bool IsBusy { get; set; }
+        public async Task GetPostComments()
         {
-            PostCommentsCollection.Clear();
-            List<Comment> comments = await ApiService.GetPostComments(PostId);
+            PageNumber = 1;
+
+            List<Comment> comments = await ApiService.GetPostComments(PostId, PageNumber,5);
             
             foreach (Comment comment in comments)
             {
@@ -73,8 +80,21 @@ namespace InstagramClone.PageModels
         public PostCommentsPageModel()
         {
             PostCommentsCollection = new ObservableCollection<Comment>();
-           
+            RemainingItemsThresholdReachedCommand = new AsyncCommand(RemainingItemsThresholdReached, allowsMultipleExecutions: false);
+
         }
+
+        private async Task RemainingItemsThresholdReached()
+        {
+            if (IsBusy) { return; }
+            PageNumber++;
+            List<Comment> comments = await ApiService.GetPostComments(PostId, PageNumber, 5);
+            foreach (Comment comment in comments)
+            {
+                PostCommentsCollection.Add(comment);
+            }
+        }
+
         private async void GetUserLoggedInfo()
         {
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();
@@ -83,13 +103,15 @@ namespace InstagramClone.PageModels
         }
         private async void PostComment(object obj)
         {
-            if (TaskInProcess) { return; }
+
+            if (TaskInProcess||string.IsNullOrEmpty(CommentText)) { return; }
             TaskInProcess = true;
             var response = await ApiService.AddPostComment(CommentText, PostId);
             if (response)
             {
+                PostCommentsCollection.Clear();
                 //await CoreMethods.DisplayAlert("", "Comentario publicado correctamente", "Ok");
-                GetPostComments();
+                await GetPostComments();
                 TaskInProcess = false;
                 CommentText = "";
             }
@@ -103,6 +125,7 @@ namespace InstagramClone.PageModels
 
         public  async override void Init(object initData)
         {
+            IsBusy = true;  
             GetUserLoggedInfo();
             //casting
             Post post = (Post)initData;
@@ -110,12 +133,8 @@ namespace InstagramClone.PageModels
             PostId = post.Id;
             PostDescription = post.Description;
             PostUserName = post.UserName;
-            List<Comment> comments = await ApiService.GetPostComments(post.Id);
-            foreach(Comment comment in comments)
-            {
-                PostCommentsCollection.Add(comment);
-            }
-            base.Init(initData);
+            await GetPostComments();
+            IsBusy = false;
         }
 
     }

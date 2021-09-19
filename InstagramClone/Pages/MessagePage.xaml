@@ -11,7 +11,7 @@
              xmlns:editor="clr-namespace:InstagramClone.Renderers">
              
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Regresar" Order="Primary" Command="{Binding GoBackToUserConversations}" >
+        <ToolbarItem Text="Regres2ar" Order="Primary" Command="{Binding GoBackToUserConversations}" >
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
@@ -20,9 +20,10 @@
     <ContentPage.Content>
         <Grid RowDefinitions="*,0.13*">
             <Grid Grid.Row="0" BackgroundColor="White">
-                <CollectionView ItemsSource="{Binding Messages}" Margin="10" 
-                                ItemTemplate="{StaticResource SelectMessageTemplate}"
-                                ItemsUpdatingScrollMode="KeepLastItemInView">
+                <CollectionView ItemsSource="{Binding Messages}" Margin="10"  FlowDirection="RightToLeft" RotationX="180" RemainingItemsThreshold="0" 
+                                ItemsUpdatingScrollMode="KeepItemsInView" RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                                ItemTemplate="{StaticResource SelectMessageTemplate}" 
+                                >
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical"
                                            ItemSpacing="15"/>
@@ -30,7 +31,7 @@
                     <CollectionView.Resources>
                         <ResourceDictionary>
                             <DataTemplate x:Key="Case1View">
-                                <Grid ColumnDefinitions=".25*,*">
+                                <Grid ColumnDefinitions=".25*,*" FlowDirection="LeftToRight" Rotation="180">
                                     <pancakeview:PancakeView
                                 BackgroundColor="Navy"
                                 Grid.Column="1"
@@ -50,7 +51,7 @@
                                 </Grid>
                             </DataTemplate>
                             <DataTemplate x:Key="Case2View">
-                                <Grid Padding="10" ColumnDefinitions="Auto,.85*,.15*">
+                                <Grid Padding="10" ColumnDefinitions="Auto,.85*,.15*" FlowDirection="LeftToRight" Rotation="180">
                                     <Frame Padding="0"
                                    CornerRadius="25"
                                    HasShadow="False"

@@ -7,6 +7,13 @@ namespace InstagramClone.Renderers
 {
     public class BorderlessEditor:Editor
     {
-
+        public BorderlessEditor()
+        {
+            TextChanged += OnTextChanged;
+        }
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            InvalidateMeasure();
+        }
     }
 }

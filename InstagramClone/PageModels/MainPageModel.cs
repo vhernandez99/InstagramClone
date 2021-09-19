@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -25,11 +27,11 @@ namespace InstagramClone.PageModels
                 _postCollection = value;
             }
         }
-        public Command ViewPostCommentsCommand => new Command<Post>(ViewPostComments);
-        public Command PostCommentCommand => new Command<int>(PostComment);
-        public Command RefreshPostsCommand => new Command(RefreshPosts);
-        public Command RemainingItemsThresholdReachedCommand => new Command(async () => await RemainingItemsThresholdReached());
-        public Command GoToUsersListPageCommand
+        public ICommand ViewPostCommentsCommand { get; }
+        public ICommand PostCommentCommand { get; }
+        public ICommand RefreshPostsCommand { get; }
+        public ICommand RemainingItemsThresholdReachedCommand { get; }
+        public ICommand GoToUsersListPageCommand
         {
             get
             {
@@ -39,7 +41,7 @@ namespace InstagramClone.PageModels
                 });
             }
         }
-        public Command GoToSearchUserCommand
+        public ICommand GoToSearchUserCommand
         {
             get
             {
@@ -49,6 +51,7 @@ namespace InstagramClone.PageModels
                 });
             }
         }
+        public ICommand DeletePostCommand { get; }
         public bool TaskInProcess { get; set; } = false;
         private string _UserLoggedImageUrl;
         public string UserLoggedImageUrl
@@ -112,7 +115,7 @@ namespace InstagramClone.PageModels
             
         }
         public int PageNumber { get; set; } = 0;
-        private async void PostComment(int postId)
+        private async Task PostComment(int postId)
         {
             if (TaskInProcess) { return; }
             TaskInProcess = true;
@@ -129,11 +132,11 @@ namespace InstagramClone.PageModels
                 TaskInProcess = false;
             }
         }
-        private async void ViewPostComments(Post post)
+        private async Task ViewPostComments(Post post)
         {
             await CoreMethods.PushPageModel<PostCommentsPageModel>(post);
         }
-        private async void RefreshPosts(object obj)
+        private async Task RefreshPosts()
         {
             IsRefreshing = true;
             PageNumber=1;
@@ -171,7 +174,41 @@ namespace InstagramClone.PageModels
         public MainPageModel()
         {
             PostsCollection = new ObservableCollection<Post>();
+            RemainingItemsThresholdReachedCommand = new AsyncCommand(RemainingItemsThresholdReached, allowsMultipleExecutions: false);
+            RefreshPostsCommand = new AsyncCommand(RefreshPosts, allowsMultipleExecutions: false);
+            ViewPostCommentsCommand = new AsyncCommand<Post>(ViewPostComments, allowsMultipleExecutions: false);
+            PostCommentCommand = new AsyncCommand<int>(PostComment, allowsMultipleExecutions: false);
+            DeletePostCommand = new AsyncCommand<int>(DeletePost, allowsMultipleExecutions: false);
+
         }
+
+        private async Task DeletePost(int postId)
+        {
+            var response = await CoreMethods.DisplayAlert("", "Realmente desea eliminar la publicacion?", "Ok", "No");
+            if (response)
+            {
+                try
+                {
+                    var apiResponse = await ApiService.DeletePost(postId);
+                    if(apiResponse)
+                    {
+                        await CoreMethods.DisplayAlert("", "Publicacion eliminada con exito", "Ok");
+                    }
+                    else
+                    {
+                        await CoreMethods.DisplayAlert("", "Error al eliminar la publicacion, intento nuevamente", "Ok");
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    await CoreMethods.DisplayAlert("", ex.Message, "Ok");
+                }
+                
+                
+            }
+        }
+
         public async Task GetUserLoggedInfo()
         {
             var userLoggedInfo = await ApiService.GetUserLoggedInfo();

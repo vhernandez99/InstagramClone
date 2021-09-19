@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace InstagramClone.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ShopPage : ContentPage
+	public partial class SellingItemsPage : ContentPage
 	{
-		public ShopPage ()
+		public SellingItemsPage()
 		{
 			InitializeComponent ();
 		}

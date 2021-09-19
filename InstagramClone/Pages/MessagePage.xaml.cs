@@ -16,5 +16,6 @@ namespace InstagramClone.Pages
         {
             InitializeComponent();
         }
+
     }
 }

@@ -64,7 +64,7 @@ namespace InstagramClone.PageModels
                 tabbedPageContainer.AddTab<MainPageModel>("", "home.png");
                 //tabbedPageContainer.AddTab<UsersListPageModel>("", "grupo.png");
                 tabbedPageContainer.AddTab<AddMediaPageModel>("", "add.png");
-                tabbedPageContainer.AddTab<ShopPageModel>("", "shop.png");
+                tabbedPageContainer.AddTab<SellingItemsPageModel>("", "shop.png");
                 tabbedPageContainer.AddTab<ProfilePageModel>("", "user.png");
                 App.Current.MainPage = tabbedPageContainer;
                 //CoreMethods.SwitchOutRootNavigation(NavigationContainerNames.MainContainer);

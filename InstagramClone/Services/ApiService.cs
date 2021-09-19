@@ -51,6 +51,16 @@ namespace InstagramClone.Services
             if (!ApiResponse.IsSuccessStatusCode) return false;
             return true;
         }
+        public static async Task<bool> DeletePost(int postId)
+        {
+            await TokenValidator.CheckTokenValidity();
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
+            var ApiRespone = await httpClient.GetAsync(AppSettings.ApiUrl + "api/Posts/DeletePost/" + postId);
+            if (!ApiRespone.IsSuccessStatusCode) return false;
+            return true;
+
+        }
         public static async Task<bool> Login(string user, string password)
         {
             string tokenFirebase = Preferences.Get("TokenFirebase", string.Empty);
@@ -124,20 +134,20 @@ namespace InstagramClone.Services
             var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/users/GetAllUsers?userName=" + initialtext ));
             return JsonConvert.DeserializeObject<List<UsersGetList>>(response);
         }
-        public static async Task<List<Comment>> GetPostComments(int id)
+        public static async Task<List<Comment>> GetPostComments(int id,int pageNumber,int pageSize)
         {
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accessToken", string.Empty));
-            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetPostComments/" + id));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/posts/GetPostComments/" + id + "/?sort=asc&pageNumber={0}&pageSize={1}", pageNumber, pageSize));
             return JsonConvert.DeserializeObject<List<Comment>>(response);
         }
-        public static async Task<List<MessageModel>> GetConversationMessages(int conversationId)
+        public static async Task<List<MessageModel>> GetConversationMessages(int conversationId,int pageNumber,int pageSize)
         {
             await TokenValidator.CheckTokenValidity();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("acessToken", string.Empty));
-            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetConversationMessages/" + conversationId));
+            var response = await httpClient.GetStringAsync(AppSettings.ApiUrl + string.Format("api/Chat/GetConversationMessages/" + conversationId + "/?sort=desc&pageNumber={0}&pageSize={1}", pageNumber, pageSize));
             return JsonConvert.DeserializeObject<List<MessageModel>>(response);
         }
 

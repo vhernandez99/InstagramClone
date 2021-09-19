@@ -17,7 +17,6 @@
                     Value="5"/>
             <Setter Property="Padding" Value="0" />
         </Style>
-        
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,*,50">
@@ -26,7 +25,7 @@
             </Frame>
             <Frame Grid.Row="1" CornerRadius="15" Padding="0" Margin="15,-45,15,0" BackgroundColor="#33CC33" BorderColor="Gray" >
                 <StackLayout Margin="10" Spacing="20" VerticalOptions="StartAndExpand">
-                    
+
                     <Label Text="Registro" HorizontalOptions="CenterAndExpand" TextColor="Black" FontAttributes="Bold" FontSize="Title"/>
                     <Frame StyleClass="RoundedFrame">
                         <entry:BorderlessEntry  StyleClass="EntryStyle" Placeholder="Nombre"  Text="{Binding Name}"/>
@@ -48,20 +47,15 @@
                             <Image Source="{Binding ImageUrl}" Aspect="AspectFill" BackgroundColor="Transparent"/>
                         </Frame>
                     </StackLayout>
-
-
                     <Button Text="Crear cuenta" CornerRadius="8" BackgroundColor="Black" TextColor="White" Command="{Binding RegisterCommand}"/>
                     <Label Text="Regresar" HorizontalOptions="CenterAndExpand" TextColor="MediumBlue" FontAttributes="Bold" FontSize="Medium">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToInitialPageCommand}" />
+                            <TapGestureRecognizer Command="{Binding GoToLoginPageCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
                     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Red"/>
                 </StackLayout>
             </Frame>
-
-
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

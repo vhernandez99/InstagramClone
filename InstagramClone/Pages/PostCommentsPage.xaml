@@ -10,7 +10,8 @@
     <ContentPage.Content>
         <StackLayout>
             <CollectionView ItemsSource="{Binding PostCommentsCollection}" 
-                            ItemsUpdatingScrollMode="KeepLastItemInView">
+                            RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                            RemainingItemsThreshold="0">
                 <CollectionView.Header>
                     <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="10,Auto,*,10">
                         <StackLayout Grid.Column="1">
@@ -37,7 +38,7 @@
                         <BoxView Grid.Row="1" Color="LightGray" HeightRequest="1"  Grid.ColumnSpan="4"/>
                     </Grid>
                 </CollectionView.Header>
-                <CollectionView.ItemsLayout>
+                <CollectionView.ItemsLayout >
                     <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>

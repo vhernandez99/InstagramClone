@@ -27,9 +27,6 @@ namespace InstagramClone.PageModels
                 return _ImageUrl;
             }
         }
-        public Command GoToInitialPageCommand => new Command(GoToInitialPage);
-        public Command SelectImageCommand => new Command(async () => await SelectImage());
-        public Command RegisterCommand => new Command(async () => await Register());
         private string _Name;
         public string Name
         {
@@ -95,6 +92,9 @@ namespace InstagramClone.PageModels
             }
         }
         public string ImageExtension { get; set; }
+        public Command GoToLoginPageCommand => new Command(GoToLoginPage);
+        public Command SelectImageCommand => new Command(async () => await SelectImage());
+        public Command RegisterCommand => new Command(async () => await Register());
         private async Task Register()
         {
             if (IsBusy) { return; }
@@ -130,8 +130,6 @@ namespace InstagramClone.PageModels
                 
                 await CoreMethods.PushPageModel<LoginPageModel>();
             }
-
-
         }
         private bool RegisterIsValid()
         {
@@ -156,7 +154,12 @@ namespace InstagramClone.PageModels
                 await CoreMethods.DisplayAlert("Error", "Tu dispositivo no soporta esta herramienta", "Ok");
                 return;
             }
-            file = await CrossMedia.Current.PickPhotoAsync();
+            file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+            {
+                //MaxWidthHeight=300,
+                PhotoSize = PhotoSize.Medium,
+                CompressionQuality = 45
+            });
             if (file == null)
                 return;
             ImageUrl = ImageSource.FromStream(() =>
@@ -166,8 +169,7 @@ namespace InstagramClone.PageModels
             });
             ImageExtension = Path.GetExtension(file.Path);
         }
-
-        private void GoToInitialPage(object obj)
+        private void GoToLoginPage(object obj)
         {
 
             CoreMethods.PopPageModel();

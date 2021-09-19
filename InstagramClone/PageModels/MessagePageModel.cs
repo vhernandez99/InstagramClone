@@ -70,7 +70,6 @@ namespace InstagramClone.Pages
         }
         public int ExternalUserId { get; set; }
         private ObservableCollection<MessageModel> _messages;
-        private bool _isConnected;
         //Actually unique UserName
         private string _loggedUserName = Preferences.Get("UserName", string.Empty);
         public string LoggedUserName
@@ -127,18 +126,6 @@ namespace InstagramClone.Pages
         }
         public int User1Id { get; set; }
         public int User2Id { get; set; }
-        public bool IsConnected
-        {
-            get
-            {
-                return _isConnected;
-            }
-            set
-            {
-                _isConnected = value;
-                RaisePropertyChanged();
-            }
-        }
         private bool _isBusy;
         public bool IsBusy
         {
@@ -166,6 +153,7 @@ namespace InstagramClone.Pages
                 RaisePropertyChanged();
             }
         }
+        private int PageNumber { get; set; }
 
         public ObservableCollection<MessageModel> Messages
         {
@@ -180,6 +168,7 @@ namespace InstagramClone.Pages
             }
         }
         public ICommand SendMessageCommand { get; }
+        public ICommand RemainingItemsThresholdReachedCommand { get; }
         public Command ConnectCommand { get; }
         public Command DisconnectCommand { get; }
         public Command GoBackToUserConversations
@@ -191,6 +180,7 @@ namespace InstagramClone.Pages
                     //Push A Page Model
                     if (IsBusy) { return; }
                     IsBusy = true;
+                    await Disconnect();
                     await CoreMethods.PopPageModel();
                     //await Disconnect();
                     IsBusy = false;
@@ -201,6 +191,7 @@ namespace InstagramClone.Pages
         {
             Messages = new ObservableCollection<MessageModel>();
             SendMessageCommand = new AsyncCommand(SendMessage, allowsMultipleExecutions: false);
+            RemainingItemsThresholdReachedCommand = new AsyncCommand(RemainingItemsThresholdReached, allowsMultipleExecutions: false);
             ConnectCommand = new Command(async () => await Connect());
             //DisconnectCommand = new Command(async () => await Disconnect());
             var connection = new HubConnectionBuilder();
@@ -221,6 +212,9 @@ namespace InstagramClone.Pages
                 return null;
             };
         }
+
+        
+
         async Task Connect()
         {
             if (_connectionState == ConnectionState.Connected)
@@ -233,7 +227,7 @@ namespace InstagramClone.Pages
                 await _connection.InvokeAsync("JoinGroupChat", ConversationId.ToString(), LoggedUserName);
                 _connection.On<string, string, int>("ReceiveGroupMessage", (user, message, loggeduserid) =>
                 {
-                    Messages.Add(new MessageModel()
+                    Messages.Insert(0,new MessageModel()
                     {
                         Messagee = message,
                         LoggedUserId = loggeduserid,
@@ -247,33 +241,46 @@ namespace InstagramClone.Pages
                 _connectionState = ConnectionState.Faulted;
                 throw;
             }
-
-
         }
         async Task SendMessage()
         {
-            if (_connectionState != ConnectionState.Connected)
+            try
             {
-                await Connect();
+                if (_connectionState != ConnectionState.Connected)
+                {
+                    await Connect();
+                }
+                if (_connectionState == ConnectionState.Connected)
+                {
+                    await _connection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message, LoggedUserId);
+                }
+                await ApiService.CreateMessage(ConversationId, Message, LoggedUserId);
+                await SendMessageNotification();
+                Message = "";
             }
-            if (_connectionState == ConnectionState.Connected)
+            catch (Exception x)
             {
-                await _connection.InvokeAsync("SendGroupMessage", ConversationId.ToString(), LoggedUserName, Message, LoggedUserId);
+                await CoreMethods.DisplayAlert("Error", x.Message, "Ok");
+                return;
             }
-            await ApiService.CreateMessage(ConversationId, Message, LoggedUserId);
-            await SendMessageNotification();
-            Message = "";
+            
         }
         async Task Disconnect()
         {
-            if (_connectionState == ConnectionState.Connected)
+            try
             {
-                await _connection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
-                await _connection.StopAsync();
+                if (_connectionState == ConnectionState.Connected)
+                {
+                    await _connection.InvokeAsync("LeaveGroupChat", ConversationId.ToString(), LoggedUserName);
+                    await _connection.StopAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                await CoreMethods.DisplayAlert("Error", x.Message, "Ok");
+                return;
             }
         }
-
-        
         async Task SendMessageNotification()
         {
             var data = new { action = "Play", userId = 5 };
@@ -303,7 +310,19 @@ namespace InstagramClone.Pages
         }
         async Task GetAllConversationMessages()
         {
-            List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId);
+            PageNumber = 1;
+            List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId,PageNumber,10);
+            foreach (MessageModel message in messages)
+            {
+                Messages.Add(message);
+            }
+        }
+        private async Task RemainingItemsThresholdReached()
+        {
+            
+            if (IsBusy) { return; }
+            PageNumber++;
+            List<MessageModel> messages = await ApiService.GetConversationMessages(ConversationId,PageNumber,10);
             foreach (MessageModel message in messages)
             {
                 Messages.Add(message);
@@ -312,15 +331,14 @@ namespace InstagramClone.Pages
 
         public async override void Init(object initData)
         {
-            await GetUserLoggedInfo();
             IsBusy = true;
+            await GetUserLoggedInfo();
             ConversationsUserGet conversation = (ConversationsUserGet)initData;
             User1Id = conversation.User1Id;
             User2Id = conversation.User2Id;
             await GetExternalUserInfo();
             ConversationId = conversation.Id;
             await GetAllConversationMessages();
-
             IsBusy = false;
         }
         protected async override void ViewIsAppearing(object sender, EventArgs e)
